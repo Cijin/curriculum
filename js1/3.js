@@ -7,8 +7,13 @@
  * @returns {string}
  */
 
-const solution = (num, str, result = '') => {
-  return ''
+const solution = (num, str) => {
+  let result = '';
+  while (num > 0) {
+    result += str;
+    num--;
+  }
+  return result;
 }
 
 module.exports = {
