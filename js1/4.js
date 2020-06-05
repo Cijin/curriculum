@@ -7,8 +7,10 @@
  * @param {function} fun
  * @returns null
  */
-
 const solution = (fun, i = 0) => {
+  while(fun(i) !== false) {
+    i++
+  }
 }
 
 module.exports = {
