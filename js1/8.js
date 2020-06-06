@@ -8,7 +8,13 @@
  */
 
 const solution = (inp, letter, counter = 0, i = 0) => {
-  return 0
+  if(letter === '') { return 0; }
+
+  while(inp.indexOf(letter, i) !== -1) {
+    i = inp.indexOf(letter, i) + 1;
+    counter++;
+  }
+  return counter;
 }
 
 module.exports = {
