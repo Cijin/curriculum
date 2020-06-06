@@ -7,13 +7,13 @@
  * @returns {string}
  */
 
-const solution = (num, str) => {
-  let result = '';
-  while (num > 0) {
-    result += str;
-    num--;
+const solution = (num, str, result = '') => {
+  if (num === 0) {
+    return result;
   }
-  return result;
+  else {
+    return solution(--num, str, result += str);     
+  }
 }
 
 module.exports = {
