@@ -10,6 +10,7 @@
  */
 
 const solution = (a, fun) => {
+  
 }
 
 module.exports = {
