@@ -14,12 +14,10 @@
 const solution = (num, fun) => {
   return () => { 
     if (num > 0) {
-      num--;
+      num -= 1;
       return fun(); 
     }
-    else { 
-      return null 
-    }
+    return null    
   }
 }
 
