@@ -10,10 +10,8 @@
 const solution = (num, str, result = '') => {
   if (num === 0) {
     return result;
-  }
-  else {
-    return solution(--num, str, result += str);     
-  }
+  }  
+  return solution(num - 1, str, result + str);     
 }
 
 module.exports = {
