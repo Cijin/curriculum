@@ -17,7 +17,9 @@ const solution = (num, fun) => {
       num -= 1;
       return fun(); 
     }
-    return null    
+    return () => {
+      return null;
+    }    
   }
 }
 
