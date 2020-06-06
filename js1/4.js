@@ -8,9 +8,10 @@
  * @returns null
  */
 const solution = (fun, i = 0) => {
-  while(fun(i) !== false) {
-    i++
+  if (fun(i) === false) {
+    return;
   }
+  return solution(fun(i + 1))
 }
 
 module.exports = {
