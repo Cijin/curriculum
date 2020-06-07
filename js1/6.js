@@ -7,7 +7,16 @@
  * @returns {boolean}
  */
 const solution = (num, i = 2) => {
-  
+  if (num <= 1) {
+    return false;
+  }  
+  else if (i > num / 2) {
+    return true;
+  }  
+  else if (num % i === 0) {
+    return false;
+  }
+  return solution(num, i + 1);
 }
 
 module.exports = {
