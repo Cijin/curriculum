@@ -8,7 +8,7 @@
  * @returns null
  */
 const solution = (fun, i = 0) => {
-  if (fun(i) === false) {
+  if (!fun(i)) {
     return;
   }
   return solution(fun, i + 1)
