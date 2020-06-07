@@ -13,6 +13,11 @@
 
 const solution = (num, fun) => {
   return () => { 
+    if (num > 0) {
+      num -= 1;
+      return fun(); 
+    }  
+    return null; 
   }
 }
 
