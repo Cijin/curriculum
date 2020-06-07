@@ -9,10 +9,13 @@
  */
 
 const solution = (inp, letter, i = 0) => {
-  if(inp.indexOf(letter) > -1) {
+  if(inp[i] === letter) {
     return true;
   }
-  return false;
+  if(i >= inp.length) {
+    return false;
+  }
+  return solution(inp, letter, i + 1);
 }
 
 module.exports = {
