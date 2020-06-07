@@ -9,10 +9,7 @@
  */
 
 const solution = (str, fun, result = '', i = 0) => {
-  for(i = 0; i < str.length; i++) {
-    result += fun(str[i]);
-  }
-  return result;
+  
 }
 
 module.exports = {
