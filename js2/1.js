@@ -10,11 +10,7 @@
  */
 
 const solution = (num, i=0, result=[]) => {
-  if (i === num) {
-    return result;
-  }
-  result.push(i);
-  return solution (num, i + 1, result);
+  return []
 }
 
 module.exports = {
