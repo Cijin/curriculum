@@ -7,6 +7,9 @@
  */
 
 const solution = (arr, time) => {
+  arr.map(e => {    
+    setTimeout(e, time);    
+  });
 }
 
 module.exports = {
