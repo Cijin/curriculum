@@ -10,8 +10,10 @@ const solution = (arr, time, i = 0) => {
   if (i === arr.length) {
     return
   }
-  setTimeout(arr[i], time);
-  return solution (arr, time, i + 1);
+  arr[i];
+  setTimeout(() => {
+    return solution (arr, time, i + 1);
+  }, time);  
 }
 
 module.exports = {
