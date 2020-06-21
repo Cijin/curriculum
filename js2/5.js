@@ -7,9 +7,11 @@
  */
 
 const solution = (arr, time, i = 0) => {
-  arr.map(e => {
-    setTimeout(e, time);
-  });
+  if (i === arr.length) {
+    return;
+  }
+  setTimeout(arr[i], time);
+  return solution (arr, time, i + 1);
 };
 
 module.exports = {
