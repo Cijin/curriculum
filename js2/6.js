@@ -7,8 +7,9 @@
  */
 
 const solution = (arr, time) => {
-  arr.map(e => {    
-    setTimeout(e, time);    
+  arr.forEach(e => {    
+    setTimeout(() => {}, time);
+    e();
   });
 }
 
