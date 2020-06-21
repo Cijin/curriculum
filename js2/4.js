@@ -20,7 +20,7 @@ const solution = (arr, cb, i=0) => {
     if (i === arr.length) {
       i = 0;
     }
-    cb(arr[i++]);
+    return cb(arr[i++]);
   }
 }
 
