@@ -5,8 +5,7 @@
  */
 
 const solution = () => {
-  Array.prototype.cForEach = function (cb) {        
-    return 0
+  Array.prototype.cForEach = function (cb) {            
   }
 }
 
