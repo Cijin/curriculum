@@ -9,9 +9,9 @@
 const solution = (arr, time, i = 0) => {
   if (i === arr.length) {
     return
-  }
-  arr[i];
-  setTimeout(() => {
+  }     
+  setTimeout(() => {    
+    arr[i]();
     return solution (arr, time, i + 1);
   }, time);  
 }
