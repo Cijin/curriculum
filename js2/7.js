@@ -5,8 +5,15 @@
  */
 
 const solution = () => {
-  Array.prototype.cForEach = function (cb) {
-    return 0
+  Array.prototype.cForEach = function (cb, i = 0) {    
+    if (this.length === 0) {
+      return
+    }
+    if (i === this.length) {
+      return
+    }
+    cb(this[i], i, this);
+    return this.cForEach (cb, i + 1); 
   }
 }
 
