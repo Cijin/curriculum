@@ -9,11 +9,11 @@
 const solution = (arr, time, i = 0) => {
   if (i === arr.length) {
     return
-  }     
-  setTimeout(() => {    
+  }
+  setTimeout(() => {
     arr[i]();
     return solution (arr, time, i + 1);
-  }, time);  
+  }, time);
 }
 
 module.exports = {
