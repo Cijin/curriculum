@@ -5,10 +5,7 @@
  */
 
 const solution = () => {
-  Array.prototype.cForEach = function (cb, i = 0) {    
-    if (this.length === 0) {
-      return
-    }
+  Array.prototype.cForEach = function (cb, i = 0) {        
     if (i === this.length) {
       return
     }
