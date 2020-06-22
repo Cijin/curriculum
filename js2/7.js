@@ -6,7 +6,7 @@
 
 const solution = () => {
   Array.prototype.cForEach = function (cb) {
-    return 0            
+    return 0
   }
 }
 
