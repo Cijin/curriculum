@@ -11,11 +11,22 @@
  * @param {integer} num1 {integer} num2
  * @return {array} arr
  */
+const makeRow = (num1, num2, i = 0, res = []) => {
+  if (i === num2) {
+    return res;
+  }
+  res.push({x: i, y: num1});
+  return makeRow(num1, num2, i + 1, res);
+};
 
-const solution = (num1, num2) => {
-  return []
-}
+const solution = (num1, num2, i = 0, res = []) => {
+  if (i === num1) {
+    return res;
+  }
+  res.push(makeRow(i, num2));
+  return solution (num1, num2, i + 1, res);
+};
 
 module.exports = {
   solution
-}
+};
