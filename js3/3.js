@@ -10,7 +10,7 @@ const solution = (arr) => {
     return arr.reduce ((acc, e) => {
       if (keys.includes(e)) {
         acc[e] = obj[e];
-      }      
+      }
       return acc;
     }, {});
   }
