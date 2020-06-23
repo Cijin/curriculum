@@ -6,6 +6,13 @@
 
 const solution = (arr) => {
   return (obj) => {
+    let keys = Object.keys(obj);
+    return arr.reduce ((acc, e) => {
+      if (keys.includes(e)) {
+        acc[e] = obj[e];
+      }      
+      return acc;
+    }, {});
   }
 }
 
