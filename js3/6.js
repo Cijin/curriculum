@@ -7,7 +7,7 @@
 const solution = (arr, res = [], counter = {}) => {
   arr.forEach((e) => {
     counter[e] = (counter[e] || 0) + 1;
-    if (counter[e] > 1 && !res.includes(e)) {
+    if (counter[e] === 2) {
       res.push(e);
     }
   });
