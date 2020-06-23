@@ -5,10 +5,9 @@
  */
 
 const solution = (arr) => {
-  return (obj) => {
-    let keys = Object.keys(obj);
+  return (obj) => {    
     return arr.reduce ((acc, e) => {
-      if (keys.includes(e)) {
+      if (obj.hasOwnProperty(e)) {
         acc[e] = obj[e];
       }
       return acc;
