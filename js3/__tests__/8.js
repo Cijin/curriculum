@@ -18,7 +18,7 @@ describe('It should call each function value of the object millieseconds after o
       'one': (d) => sum += d,
       'two': (c) => sum += c
     }
-    solution(a, 100)
+    solution(a, 50)
 
     setTimeout(() => {
       expect(sum).toEqual('0one')
