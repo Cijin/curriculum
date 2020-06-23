@@ -4,9 +4,16 @@
  * @returns {array}
 */
 
-const solution = (arr) => {
-  return []
-}
+const solution = (arr, res = []) => {
+  arr.forEach((e, i) => {
+    arr.forEach((el, idx) => {
+      if (e === el && i !== idx && !res.includes(e)) {
+        res.push(e);
+      }
+    });
+  });
+  return res;
+};
 
 module.exports = {
   solution
