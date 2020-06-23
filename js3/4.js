@@ -5,8 +5,15 @@
  * @returns {boolean}
  */
 
-const solution = (arr, num) => {
-  return true
+const solution = (arr, num, isTrue = false) => {
+  arr.forEach((e, i) => {
+    arr.forEach((el, idx) => {
+      if (el + e === num && i !== idx) {
+        isTrue = true;
+      }
+    });
+  });
+  return isTrue;
 }
 
 module.exports = {
