@@ -5,13 +5,12 @@
  * @returns {boolean}
  */
 
-const solution = (arr, num, isTrue = false) => {
-  arr.forEach((e, i) => {
-    arr.forEach((el, idx) => {
-      if (el + e === num && i !== idx) {
-        isTrue = true;
-      }
-    });
+const solution = (arr, num, isPresent = {}, isTrue = false) => {
+  arr.forEach((e) => {
+    if (isPresent[num - e]) {
+      isTrue = true;
+    }
+    isPresent[e] = true;
   });
   return isTrue;
 }
