@@ -12,8 +12,8 @@ const solution = (obj, num, i = 0) => {
   if (i === keys.length) {
     return
   }
+  obj[keys[i]](keys[i]);
   setTimeout(() => {
-    obj[keys[i]](keys[i]);
     return solution (obj, num, i + 1);
   }, num);
 };
