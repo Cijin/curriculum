@@ -6,8 +6,13 @@
  **/
 
 const solution = (obj1, obj2) => {
-  return {}
-}
+  let keys = Object.keys(obj1);
+  return keys.reduce((acc, key) => {
+    acc[key] = (obj2[key]) ? acc[key] = obj2[key](obj1[key]) : obj1[key];
+    return acc;
+  }, {});
+};
+
 module.exports = {
   solution
 }
