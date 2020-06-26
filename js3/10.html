@@ -7,8 +7,18 @@
   const nextButton = document.querySelector('.next');
   const prevButton = document.querySelector('.prev');
   const pokeDisplay = document.querySelector('.display');
+  const url = 'https://pokeapi.co/api/v2/pokemon/';
 
   function render (data) {
-    
-  }
+    const fetchPromises = data.results.map((pokemon) => {
+      return fetch(pokemon.url).then((pokeRes) => {
+        return pokeRes.json();
+      });
+      return fetchPromises;
+    }).then((dataList) => {
+      return dataList.reduce((html, poke) => {
+        return 
+      }, '');
+    })
+  };
 </script>
