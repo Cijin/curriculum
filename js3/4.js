@@ -5,8 +5,14 @@
  * @returns {boolean}
  */
 
-const solution = (arr, num) => {
-  return true
+const solution = (arr, num, isPresent = {}, isTrue = false) => {
+  arr.forEach((e) => {
+    if (isPresent[num - e]) {
+      isTrue = true;
+    }
+    isPresent[e] = true;
+  });
+  return isTrue;
 }
 
 module.exports = {
