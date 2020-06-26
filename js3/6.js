@@ -4,9 +4,15 @@
  * @returns {array}
 */
 
-const solution = (arr) => {
-  return []
-}
+const solution = (arr, res = [], counter = {}) => {
+  arr.forEach((e) => {
+    counter[e] = (counter[e] || 0) + 1;
+    if (counter[e] === 2) {
+      res.push(e);
+    }
+  });
+  return res;
+};
 
 module.exports = {
   solution
