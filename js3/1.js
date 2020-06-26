@@ -5,8 +5,16 @@
  */
 
 const solution = (arr, obj) => {
-  return []
-}
+  if (!arr.length) {
+    return [];
+  }
+  return arr.reduce((acc, e) => {    
+    if (obj[e]) {
+      acc.push(obj[e]);
+    }
+    return acc;
+  }, []);
+};
 
 module.exports = {
   solution
