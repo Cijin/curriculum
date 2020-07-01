@@ -1,0 +1,99 @@
+<head>
+  <style>
+    .container {
+      width: 655px;
+      height: 800px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+      text-align: center;
+      background: url('https://c0d3.com/challenges/assets/watch.jpg');      
+    }
+
+    .innerContainer {
+      height: 377px;
+      width: 377px;
+      position: relative;
+      border-radius: 50%;
+      margin: 208px auto auto 132px;
+      overflow: hidden;
+    }
+
+    .content {
+      background-color: aliceblue;
+      position: absolute;
+      top: 50%;
+      height: 100%;
+      width: 100%;
+      cursor: pointer;
+      transition: top 0.5s ease-in-out;    
+    }
+
+    .content.fill {
+      top: 0;
+    }
+
+    .time {
+      font-size: 5em;
+      margin-top: 30px;
+    }
+
+    iframe {
+      margin-top: -120px;
+      margin-left: -120px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="innerContainer">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2795.3481735165187!2d98.30987794627373!3d7.766553792562277!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sth!4v1593589421104!5m2!1sen!2sth" 
+      width="600" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+      <div class="content">
+        <h1 class="time">Current Time</h1>
+        <hr>
+        <h2 class="day">Day</h2>
+        <h2 class="date">Date</h2>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const content = document.querySelector('.content');
+    const timeContainer = document.querySelector('.time');
+    const dayContainer = document.querySelector('.day');
+    const dateContainer = document.querySelector('.date');
+
+    const d = new Date();
+    const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const months = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+
+    const render = () => {
+      let date = d.getDate();
+      let year = d.getFullYear();
+      let month = d.getMonth();
+      let day = d.getDay();
+      let hour = d.getHours();
+      let minutes = d.getMinutes();
+
+      minutes = (minutes < 10) ? `0${minutes}` : minutes;
+
+      const today = `${months[month - 1]} ${date}, ${year}`;
+      const time = `${hour}:${minutes}`;
+      
+      timeContainer.innerText = time;
+      dateContainer.innerText = today;
+      dayContainer.innerText = weekday[day];
+    };
+    render();
+
+    content.addEventListener('click', () => {
+      if (content.classList.contains('fill')) {
+        return content.classList.remove('fill');
+      } 
+      content.classList.add('fill');
+    });
+  </script>
+</body>
