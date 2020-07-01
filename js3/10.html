@@ -1,0 +1,65 @@
+<div>
+  <button class="prev">Previous</button>
+  <button class="next">Next</button>
+</div>
+<div class="display"></div>
+<script>
+  const nextButton = document.querySelector('.next');
+  const prevButton = document.querySelector('.prev');
+  const pokeDisplay = document.querySelector('.display');
+  let onLoad = true;
+  const mainUrl = 'https://pokeapi.co/api/v2/pokemon/';
+  let nextUrl = null;
+  let prevUrl = null;
+
+  function render (data) {
+    const fetchPromises = data.results.map((pokemon) => {
+      return fetch(pokemon.url).then((pokeRes) => {
+        return pokeRes.json();
+      });      
+    })
+    return Promise.all(fetchPromises).then((dataList) => {
+      return dataList.reduce((html, poke) => {
+        return html = `${html}<h1>${poke.name}</h1><img src=${poke.sprites.front_default} />`;
+      }, '');
+    }).then((html) => {
+      pokeDisplay.innerHTML = html;
+    });
+  };
+
+  prevButton.onclick = () => {    
+    if (prevUrl) {
+      return fetch(prevUrl).then((res) => {
+        return res.json();
+      }).then((prevData) => {
+        nextUrl = prevData.next;
+        prevUrl = prevData.previous;
+        render(prevData);
+      })      
+    }
+    return;
+  }
+
+  nextButton.onclick = () => {    
+    if (nextUrl) {
+      return fetch(nextUrl).then((res) => {
+        return res.json();
+      }).then((nextData) => {
+        prevUrl = nextData.previous;
+        nextUrl = nextData.next;
+        render(nextData);
+      })
+    }
+    return;
+  }
+
+  if (onLoad) {
+    onLoad = false;
+    fetch(mainUrl).then((res) => {
+      return res.json();
+    }).then((data) => {
+      nextUrl = data.next;
+      render(data);
+    });
+  }
+</script>
