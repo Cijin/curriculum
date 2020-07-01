@@ -10,7 +10,7 @@
 const solution = (num, fun) => {
   if (num > 0) {
     fun();
-    return solution(num -1, fun);
+    solution(num -1, fun);
   }
 }
 
