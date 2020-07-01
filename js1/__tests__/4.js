@@ -23,7 +23,7 @@ describe('call with increasing numbers', () => {
     let calls = []
     solution((e) => {
       calls.push(e)
-      return e < 3 ? 0 : false
+      return e < 3 ? 1 : false
     })
     expect(calls).toEqual([0, 1, 2, 3])
   })
