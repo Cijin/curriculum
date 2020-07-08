@@ -48,8 +48,7 @@ const highlight = (xPos, yPos, lastXPos, lastYPos, i = xPos, j = yPos) => {
   }
   //gets single value as i goes from 0 - 24
   //will make sense if you try it on a 3 x 3 array on paper
-  squares[i + (j * rows)].addSelected();
-  console.log(i, j);
+  squares[i + (j * rows)].addSelected();  
   return highlight (xPos, yPos, lastXPos, lastYPos, i, j + 1);
 };
 
@@ -88,12 +87,18 @@ function draw() {
 
   stopSelection();
   //50 block width + 10 for margins + 4 for the border
-  let xPos = Math.floor(rect.startX / 60);
-  let yPos = Math.floor(rect.startY / 60);
-  let lastXPos = xPos + Math.floor(rect.w / 60);
-  let lastYPos = yPos + Math.floor(rect.h / 60);
+  let xPos = Math.floor(rect.startX / 64);
+  let yPos = Math.floor(rect.startY / 64);
+  let lastXPos = Math.floor((rect.startX + rect.w) / 64);
+  let lastYPos = Math.floor((rect.startY + rect.h) / 64);
   //for instances where scrolling from bottom to top
-  if (xPos > lastXPos) {
+  if (xPos > lastXPos && yPos > lastYPos) {
+    highlight(lastXPos, lastYPos, xPos, yPos);
+  }
+  if(yPos > lastYPos) {
+    highlight(xPos, lastYPos, lastXPos, yPos);
+  }
+  if(xPos > lastXPos) {
     highlight(lastXPos, lastYPos, xPos, yPos);
   }
   highlight(xPos, yPos, lastXPos, lastYPos);
