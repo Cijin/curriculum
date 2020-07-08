@@ -60,7 +60,7 @@
     //block class
     function Block () {
       const block = document.createElement('div');
-      block.className = 'square';      
+      block.className = 'square';
       container.appendChild(block);
 
       this.removeSelected = () => {
@@ -70,7 +70,7 @@
       this.addSelected = () => {
         block.classList.add('selected');
       }
-    }  
+    }
 
     const stopSelection = (i = 0, j = 0) => {
       squares.forEach((square) => square.removeSelected());
@@ -81,22 +81,22 @@
       if (i > lastXPos) {
         return;
       }
-      if (j > lastYPos) {        
+      if (j > lastYPos) {
         return highlight (xPos, yPos, lastXPos, lastYPos, i + 1, yPos);
       }
       //gets single value as i goes from 0 - 24
       //will make sense if you try it on a 3 x 3 array on paper
       squares[i + (j * rows)].addSelected();
-      console.log(i, j);  
+      console.log(i, j);
       return highlight (xPos, yPos, lastXPos, lastYPos, i, j + 1);
     };
-    
+
     canvas.addEventListener('mousedown', mouseDown);
     canvas.addEventListener('mouseup', mouseUp);
     canvas.addEventListener('mousemove', mouseMove);
 
     //starting coordinates for the rectangle
-    function mouseDown(e) {      
+    function mouseDown(e) {
       rect.startX = e.pageX;
       rect.startY = e.pageY;
       drag = true;
@@ -106,7 +106,6 @@
       drag = false;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
-    
     //based on mouses current position and initial position
     //calculate width and height of rectangle
     function mouseMove(e) {
@@ -118,15 +117,15 @@
       }
     };
 
-    //draws a filled rectangle using 
+    //draws a filled rectangle using
     //start positions and dimensions we have calculated 
     //with the help of the funcitons above
     function draw() {
       ctx.fillStyle = "rgba(0, 128, 255, 0.3)";
       ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
-      
+
       stopSelection();
-      //50 block width + 10 for margins + 4 for the border     
+      //50 block width + 10 for margins + 4 for the border
       let xPos = Math.floor(rect.startX / 64);
       let yPos = Math.floor(rect.startY / 64);
       let lastXPos = xPos + Math.floor(rect.w / 64); 
@@ -134,8 +133,8 @@
       //for instances where scrolling from bottom to top
       if (xPos > lastXPos) {
         highlight(lastXPos, lastYPos, xPos, yPos);
-      }      
-      highlight(xPos, yPos, lastXPos, lastYPos);            
+      }
+      highlight(xPos, yPos, lastXPos, lastYPos);
     };
 
     render(rows * rows);
