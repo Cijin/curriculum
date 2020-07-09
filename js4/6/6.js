@@ -95,12 +95,15 @@ function draw() {
   if (xPos > lastXPos && yPos > lastYPos) {
     highlight(lastXPos, lastYPos, xPos, yPos);
   }
+  //bottom left to top right
   if(yPos > lastYPos) {
     highlight(xPos, lastYPos, lastXPos, yPos);
   }
+  //top right to bottom left
   if(xPos > lastXPos) {
-    highlight(lastXPos, lastYPos, xPos, yPos);
+    highlight(lastXPos, yPos, xPos, lastYPos);
   }
+  //from top left to bottom right
   highlight(xPos, yPos, lastXPos, lastYPos);
 };
 
