@@ -1,0 +1,32 @@
+<head>
+  <style>
+    .userInput {
+      margin-bottom: 10px;
+    }
+
+    .square {
+      display: inline-block;
+      border: 1px solid black;
+      box-sizing: border-box;
+      height: 50px;
+      width: 50px;
+      background-color: darkgray;
+      margin-top: 5px;
+      cursor: pointer;
+    }
+
+    .on {
+      background-color: lightgreen;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h3>Plese Enter Matrix Size (n x n, n >= 2)</h3>
+    <p>Enter '0' to Quit.</p>
+    <input class="userInput" type="number" placeholder="Number greater than 1" />
+    <button class="start">Start</button>
+    <div class="squaresContainer"></div>
+  </div>
+  <script src="./4.js"></script>
+</body>
