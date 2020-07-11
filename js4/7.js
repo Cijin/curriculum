@@ -20,7 +20,7 @@ const cleanUp = () => {
   container.innerHTML = '';
   board.forEach(block => {
     block.delete ();
-  });  
+  });
 };
 
 const isGameOver = (i = 0) => {
@@ -56,8 +56,8 @@ const insertVal = (i = 0, val = 0) => {
     return insertVal (i + 1, val = 0);
   }
   directions.forEach ((dir) => {
-    let index = i + parseInt(dir); 
-    if (board[index] && board[index].isBomb) {       
+    let index = i + parseInt(dir);
+    if (board[index] && board[index].isBomb) {
       val += 1;
     }
   });
@@ -101,25 +101,25 @@ function Block (isBomb, pos) {
     this.revealed = true;
     this.reveal ();
 
-    if (isGameOver ()) {      
+    if (isGameOver ()) {
       if (confirm ("You Win. Play Again?")) {
         return startGame ();
       }
     }
-    if (this.isBomb) {        
-      element.innerHTML = 'B';      
+    if (this.isBomb) {
+      element.innerHTML = 'B';
       if (confirm ("You Lose. Play Again?")) {
         return startGame ();
-      }      
-    }
-    
-    if (this.value) {
-      element.innerHTML = this.value;      
+      }
     }
 
-    if (!this.value && !this.isBomb) {      
+    if (this.value) {
+      element.innerHTML = this.value;
+    }
+
+    if (!this.value && !this.isBomb) {
       revealNeighbours (pos);
-    }  
+    }
   };
 
   this.reveal = () => {
@@ -133,7 +133,7 @@ function Block (isBomb, pos) {
 
   this.select = () => {
     return element.onclick ();
-  }
+  };
 
   container.appendChild(element);
 };
