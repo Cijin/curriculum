@@ -15,6 +15,7 @@ const render = (blocks, i = 0) => {
   return render (blocks, i + 1);
 };
 
+//following function removes previous values and the board
 const cleanUp = () => {
   container.innerHTML = '';
   board.forEach(block => {
@@ -38,12 +39,15 @@ const startGame = () => {
   insertVal ();
 };
 
+//directions to look for possible bomb locations
+//or empty blocks depending on function use
 const directions = [
   [(-1 * rows) - 1], [(-1 * rows)], [(-1 * rows) + 1],
   [-1], [+1],
   [rows - 1], [rows], [rows + 1]
 ];
 
+//function to check how many if any bombs surrounding a block
 const insertVal = (i = 0, val = 0) => {
   if (i === (rows * rows)) {
     return;
@@ -62,45 +66,64 @@ const insertVal = (i = 0, val = 0) => {
 };
 
 const revealNeighbours = (curPos) => {
-  //use i, j to check for walls
+  directions.forEach((dir) => {
+    let index = curPos + parseInt(dir);
+    //had to do this otherwise the right end numbers were revealed
+    //when they were not supposed to
+    if (curPos % rows === 0 && (index + 1) % rows !== 0 && board[index] && !board[index].isBomb) {
+      return board[index].select ();
+    }
+    if (curPos % rows !== 0 && (index % rows) !== 0 && board[index] && !board[index].isBomb) {
+      return board[index].select ();
+    }
+  });
 };
 
 function Block (isBomb, pos) {
   const element = document.createElement ('div');
+  element.id = pos;
   this.revealed = false;
   element.className = 'block';
   this.value = 0;
-  this.isBomb = isBomb; 
+  this.isBomb = isBomb;
+
+  element.oncontextmenu = (e) => {
+    if (!this.revealed) {
+      element.classList.toggle ('flagged');
+      e.preventDefault ();
+    }
+  }
 
   element.onclick = () => {
     if (this.revealed) {
       return;
     }
     this.revealed = true;
-    if (isGameOver ()) {
-      this.reveal ();
+    this.reveal ();
+
+    if (isGameOver ()) {      
       if (confirm ("You Win. Play Again?")) {
         return startGame ();
       }
     }
     if (this.isBomb) {        
-      element.innerHTML = 'B';
-      this.reveal ();
+      element.innerHTML = 'B';      
       if (confirm ("You Lose. Play Again?")) {
         return startGame ();
       }      
     }
+    
     if (this.value) {
-      element.innerHTML = this.value;
-      this.reveal ();
+      element.innerHTML = this.value;      
     }
-    if (!this.value && !this.isBomb) {
-      this.reveal ();
+
+    if (!this.value && !this.isBomb) {      
       revealNeighbours (pos);
     }  
   };
 
   this.reveal = () => {
+    element.classList.remove ('flagged');
     return element.classList.add ('reveal');
   };
 
