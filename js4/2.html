@@ -1,0 +1,77 @@
+<head>
+  <style>
+    .container .fas {
+      -webkit-text-stroke-width: 3px;
+      -webkit-text-stroke-color: black;
+      color: yellow;
+    }
+
+    i {
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+  </style>
+  <script src="https://kit.fontawesome.com/b60951bd83.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="container"></div>
+  <p class="text">You are giving 0 Stars!</p>
+  <script>
+    const container = document.querySelector('.container');
+    const text = document.querySelector('.text');
+    const allStars = [];
+    let isSelected = false;
+
+    const upTo = (id, addC, remC) => {
+      isSelected = false;
+      allStars.forEach((star, idx) => {
+        if (!(idx > id)) {
+          return star.toggleClass(remC, addC);
+        }
+        return star.toggleClass(addC, remC);
+      });
+      text.innerText = `You are giving ${+id + 1} stars!`;
+    }
+
+    function Star (index = 0) {
+      this.element = document.createElement('i');
+      this.element.id = index++;
+      this.element.className = 'far';
+      this.element.classList.add('fa-star');
+      container.append(this.element);
+
+      this.toggleClass = (removeClass, addClass) => {
+        this.element.classList.remove(removeClass);
+        this.element.classList.add(addClass);
+      };
+
+      this.element.addEventListener('mouseenter', () => {
+        upTo(this.element.id, 'fas', 'far');
+      });
+
+      container.addEventListener('mouseleave', () => {
+        if (isSelected) {
+          return;
+        }
+        text.innerText = 'You are giving 0 stars!';
+        this.toggleClass('fas', 'far');
+      });
+
+      this.element.addEventListener('click', (e) => {
+        isSelected = true;
+        text.innerText = `You have given ${+this.element.id + 1} stars!`;
+      });
+    };
+
+    const createStars = (i = 0) => {
+      if (i === 5) {
+        return;
+      }
+      allStars.push(new Star(i));
+      return createStars(i + 1);
+    }
+
+    createStars();
+  </script>
+</body>

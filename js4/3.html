@@ -1,0 +1,51 @@
+<head>
+  <style>
+    .smallContainer {
+      margin: auto;
+      width: 421px;
+      height: 168px;
+      cursor: none;
+    }
+
+    .scope {
+      display: none;
+      position: fixed;
+      pointer-events: none;
+      height: 200px;
+      width: 200px;
+      background: url('https://c0d3.com/challenges/assets/fair/big.jpg');
+      background-repeat: no-repeat;
+      clip-path: circle(100px at center);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="smallContainer">
+    <img class="smallImg" src="https://c0d3.com/challenges/assets/fair/small.jpg" />
+  </div>
+  <div class="scope">
+    <img class="scopeImg" src="https://c0d3.com/challenges/assets/fair/scope.png" />
+  </div>
+  <script>
+    const smallImg = document.querySelector('.smallImg');
+    const scope = document.querySelector('.scope');
+
+    smallImg.addEventListener('mousemove', (e) => {
+      scope.style.display = 'block';
+
+      const backX = - 1 * e.offsetX * (1263/421) + 100;
+      const backY = - 1 * e.offsetY * (503/168) + 100;     
+
+      scope.style.top = `${e.clientY - 100}px`;
+      scope.style.left = `${e.clientX - 100}px`;
+      
+      scope.style.backgroundPositionX = `${backX}px`;
+      scope.style.backgroundPositionY = `${backY}px`;
+    });
+
+    smallImg.addEventListener('mouseleave', () => {
+      scope.style.display = 'none';
+    });
+  </script>
+</body>
