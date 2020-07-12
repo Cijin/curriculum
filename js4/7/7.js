@@ -57,7 +57,10 @@ const insertVal = (i = 0, val = 0) => {
   }
   directions.forEach ((dir) => {
     let index = i + parseInt(dir);
-    if (board[index] && board[index].isBomb) {
+    if (i % rows === 0 && (index + 1) % rows !== 0 && board[index] && board[index].isBomb) {
+      val +=1;
+    }
+    else if ((index % rows) !== 0 && board[index] && board[index].isBomb) {
       val += 1;
     }
   });
