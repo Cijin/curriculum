@@ -57,9 +57,15 @@ const insertVal = (i = 0, val = 0) => {
   }
   directions.forEach ((dir) => {
     let index = i + parseInt(dir);
+    //might seem redundant but without the first statement the bombs on the right end
+    //of the board are counted as well
+    //ex: when i === 0, i + rows = 9 which is not the element below
     if (i % rows === 0 && (index + 1) % rows !== 0 && board[index] && board[index].isBomb) {
       val +=1;
     }
+    //i % rows !== 0 is added as it is checked above already.
+    //couldn't use return like below as it needs to keep iterating for other
+    //valid positions
     if (i % rows !== 0 && (index % rows) !== 0 && board[index] && board[index].isBomb) {
       val += 1;
     }
@@ -73,6 +79,7 @@ const revealNeighbours = (curPos) => {
     let index = curPos + parseInt(dir);
     //had to do this otherwise the right end numbers were revealed
     //when they were not supposed to
+    //similar reasoning for one above.
     if (curPos % rows === 0 && (index + 1) % rows !== 0 && board[index] && !board[index].isBomb) {
       return board[index].select ();
     }
