@@ -16,7 +16,7 @@ app.post('/commands', (req, res) => {
   let command = req.body.process;
   exec(command, (error, stdout) => {
     if (error) {       
-      return res.send({output: error});
+      return res.json({output: error});
     }    
     return res.json({output: stdout});
   });
