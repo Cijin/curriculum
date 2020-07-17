@@ -1,0 +1,66 @@
+<head>
+  <style>
+    .option {
+      cursor: pointer;
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Commands</h1>
+  <p>For security reasons only the following commands are allowed</p>
+  <p class="option">ls</p>
+  <p class="option">git status</p>
+  <p class="option">ls ~/</p>
+  <p class="option">cat</p>
+  <input type="text" class="inputCommand" />
+  <hr>
+  <pre class="output"></pre>
+  <script>
+    const options = document.querySelectorAll('.option');
+    const inputCommand = document.querySelector('.inputCommand');
+    const output = document.querySelector('.output');
+    inputCommand.focus();
+    const sendCommand = () => {
+      let value = inputCommand.value;      
+      const command = value.split(" ")[0];      
+      if (!value) {
+        return;
+      }
+      if (command === 'git' && value.split(" ")[1] !== 'status') {
+        return output.innerText = "Error! You can only check git status";
+      }
+      if (command === 'cat' && !value.split(" ")[1]) {
+        return output.innerText = "Error! Please provide cat with an argument"
+      }
+      if (command !== 'ls' && command !== 'cat' && command !== 'git') {
+        return output.innerText = "Error! Please try another command";
+      }
+      fetch('/commands', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({ process: value })
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        output.innerText = data.output;
+        inputCommand.value = '';
+      });
+    }
+
+    inputCommand.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter' && inputCommand.value) {
+        sendCommand();
+      }
+    });
+
+    options.forEach((option) => {
+      option.addEventListener('click', () => {
+        inputCommand.value = option.innerText;
+        sendCommand();
+      });      
+    })
+  </script>
+</body>
