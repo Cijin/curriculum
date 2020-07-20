@@ -18,10 +18,14 @@ app.get('/files', (req, res) => {
       console.log("File read error");
       return res.sendStatus(500);
     }
-    if (data) {
-      return res.json([data]);
-    }
+    // if (data) {
+    //   return res.json([data]);
+    // }
   })
+});
+
+app.get('/api/files/:filname', (req, res) => {
+  res.json(files[req.params.filename].content);
 });
 
 app.post('/api/files', (req, res) => {
