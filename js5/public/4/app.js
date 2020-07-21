@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
 const express = require('express');
 const app = express();
 
@@ -15,22 +16,28 @@ fs.readFile(path.resolve(__dirname, "./fileInfo"), (err, data) => {
   }
 })
 
+//middleware to see requests in console
+app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'index.html'));
 });
 
-app.get('/files', (req, res) => {
-  res.json(Object.keys(files));
+app.get('/files', (req, res) => {  
+  let returnObj = {};
+  returnObj.filenames = Object.keys(files);
+  returnObj.current = files.current;
+  return res.json(returnObj);
 });
 
-app.get('/api/file/:filname', (req, res) => {
-  res.json(files[req.params.filename].content);
+app.get('/api/file/:filename', (req, res) => {
+  files.current = files[req.params.filename];
+  return res.json(files[req.params.filename]);
 });
 
 app.post('/api/files', (req, res) => {
-  const name = req.body.name;
+  const name = req.body.filename;
   const content = req.body.content;
   if (!name || !content) {
     return res.sendStatus(400);
@@ -38,6 +45,7 @@ app.post('/api/files', (req, res) => {
   files[name] = {};
   files[name].content = content;
   files[name].created = Date.now();
+  files.current = content;
   fs.writeFile(
     path.resolve(__dirname, "./fileInfo"),
     JSON.stringify(files), () => {}

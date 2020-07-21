@@ -69,6 +69,15 @@
       padding-top: 5px;
       margin-bottom: 10px;      
     }
+
+    .divFileContainer {
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    .divFileContainer:hover {
+      color: darkgray
+    }
   </style>
 </head>
 <body>
@@ -86,7 +95,7 @@
 <script src="https://pagecdn.io/lib/ace/1.4.12/ace.js" crossorigin="anonymous" integrity="sha256-Q9hnBpgBFstzZOr+OKFOWZWfcF5nFXO8Qz48Nmndo6U=" ></script>
 <script>
   const editor = ace.edit("editor");
-  editor.setTheme("ace/theme/chaos");
+  editor.setTheme("ace/theme/chaos");  
 
   const btnCreateFile = document.querySelector('.btnCreateFile');
   const inpNewFilename = document.querySelector('.inpNewFileName');
@@ -94,14 +103,20 @@
 
   function File(name) {
     const element = document.createElement('div');
-    element.innerHTML = `
-      <div class="filecontainer">
-      <p class="file">
-      <a href="/api/file/${name}>${name}</a>
-      </p>      
-      </div>`
+    element.className = "divFileContainer";
+    element.innerText = `${name}`;
+    
+    element.addEventListener('click', () => {
+      fetch(`api/file/${name}`)
+        .then((res) => {
+          return res.json();
+        }).then((file) => {
+          lastFileName = name;
+          editor.setValue(file.content);
+        });
+    });
 
-    divFiles.append(element);
+    divFiles.appendChild(element);
   };
 
   const addNewFile = (filename, content) => {
@@ -116,7 +131,7 @@
     fetch('/api/files', fetchOptions)
       .then(() => {
         window.location.reload();
-      })
+      });
   };
 
   btnCreateFile.addEventListener('click', () => {
@@ -128,8 +143,17 @@
   let allFiles = [];
   fetch('/files')
     .then((response) => {
-      response.json()
-    }).then((filenames) => {
-      allFiles = filenames.map((filename) => new File(filename));
+      if(!response.ok) {
+        return console.log("Api Error");
+      }
+      return response.json();
+    }).then((data) => {      
+      allFiles = data.filenames.map((filename) => {
+        if(filename !== "current")
+        new File(filename)
+      });
+      if(data.current) {
+        editor.setValue(data.current.content);
+      } 
     });
 </script>
