@@ -92,6 +92,18 @@
   const inpNewFilename = document.querySelector('.inpNewFileName');
   const divFiles = document.querySelector('.divFiles');
 
+  function File(name) {
+    const element = document.createElement('div');
+    element.innerHTML = `
+      <div class="filecontainer">
+      <p class="file">
+      <a href="/api/file/${name}>${name}</a>
+      </p>      
+      </div>`
+
+    divFiles.append(element);
+  };
+
   const addNewFile = (filename, content) => {
     let fetchOptions = {
       method: 'POST',
@@ -107,14 +119,17 @@
       })
   };
 
-  const addFileToDom = (fileName) => {
-    
-  };
-
   btnCreateFile.addEventListener('click', () => {
     const newFileName = inpNewFilename.value;
-    const content = editor.getValue();
-    addFileToDom (newFileName, content);
+    const content = editor.getValue();    
     addNewFile(newFileName, content);
   });
+
+  let allFiles = [];
+  fetch('/files')
+    .then((response) => {
+      response.json()
+    }).then((filenames) => {
+      allFiles = filenames.map((filename) => new File(filename));
+    });
 </script>
