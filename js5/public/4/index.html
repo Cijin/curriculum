@@ -1,0 +1,160 @@
+<head>
+  <title>Noter</title>
+  <style>
+    body {
+      background-color: #6f4a8e;
+    }
+
+    .divInputSection {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .inpNewFileName {
+      padding-left: 10px;     
+      width: 50%;
+      height: 40px;
+      border: none;
+      border-radius: 8px;       
+    }
+
+    .inpNewFileName:focus {
+      outline: none;
+    }
+
+    .btnCreateFile {
+      width: 6%;      
+      height: 40px;
+      border-radius: 8px;
+      border: none;
+      background-color: 221f3b;
+      color: lightcyan;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    .btnCreateFile:focus {
+      outline: none;
+    }
+
+    .btnCreateFile:hover {
+      background-color: cadetblue;
+    }
+
+    #editor {
+      position: absolute;
+      top: 100px;
+      right: 0;
+      bottom: 0;
+      left: 400px;
+    }
+
+    .divFileNames {
+      position: absolute;
+      top: 100px;
+      left: 0;
+      bottom: 0;
+      width: 400px;
+      background-color: #221f3b;
+    }
+
+    .divFiles {
+      text-align: center;
+    }
+
+    .h2Files {
+      color: lightcyan;
+      background-color: palevioletred;
+      height: 40px;
+      padding-top: 5px;
+      margin-bottom: 10px;      
+    }
+
+    .divFileContainer {
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    .divFileContainer:hover {
+      color: darkgray
+    }
+  </style>
+</head>
+<body>
+  <div class="divInputSection">
+    <input class="inpNewFilename" type="text" placeholder="Enter File Name Here :)"/>
+    <button class="btnCreateFile">Create File</button>
+  </div>
+  <div id="editor"></div>
+  <div class="divFileNames">
+    <div class="divFiles">
+      <h2 class="h2Files">Files</h2>
+    </div>
+  </div>
+</body>
+<script src="https://pagecdn.io/lib/ace/1.4.12/ace.js" crossorigin="anonymous" integrity="sha256-Q9hnBpgBFstzZOr+OKFOWZWfcF5nFXO8Qz48Nmndo6U=" ></script>
+<script>
+  const editor = ace.edit("editor");
+  editor.setTheme("ace/theme/chaos");  
+
+  const btnCreateFile = document.querySelector('.btnCreateFile');
+  const inpNewFilename = document.querySelector('.inpNewFileName');
+  const divFiles = document.querySelector('.divFiles');
+
+  function File(name) {
+    const element = document.createElement('div');
+    element.className = "divFileContainer";
+    element.innerText = `${name}`;
+    
+    element.addEventListener('click', () => {
+      fetch(`api/file/${name}`)
+        .then((res) => {
+          return res.json();
+        }).then((file) => {
+          lastFileName = name;
+          editor.setValue(file.content);
+        });
+    });
+
+    divFiles.appendChild(element);
+  };
+
+  const addNewFile = (filename, content) => {
+    let fetchOptions = {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({ filename, content })
+    };
+
+    fetch('/api/files', fetchOptions)
+      .then(() => {
+        window.location.reload();
+      });
+  };
+
+  btnCreateFile.addEventListener('click', () => {
+    const newFileName = inpNewFilename.value;
+    const content = editor.getValue();    
+    addNewFile(newFileName, content);
+  });
+
+  let allFiles = [];
+  fetch('/files')
+    .then((response) => {
+      if(!response.ok) {
+        return console.log("Api Error");
+      }
+      return response.json();
+    }).then((data) => {      
+      allFiles = data.filenames.map((filename) => {
+        if(filename !== "current") {
+          new File(filename)
+        }
+      });
+      if(data.current) {
+        editor.setValue(data.current.content);
+      } 
+    });
+</script>

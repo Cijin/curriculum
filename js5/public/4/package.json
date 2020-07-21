@@ -1,0 +1,24 @@
+{
+  "name": "js5solutions.freedomains.dev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "deploy.config.js",
+  "scripts": {
+    "start:myproxy": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "myproxy@freedomains.dev:/home/myproxy/js5solutions.freedomains.dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "jimp": "^0.14.0",
+    "morgan": "^1.10.0",
+    "node-fetch": "^2.6.0"
+  }
+}
