@@ -26,14 +26,20 @@ app.get('/', (req, res) => {
 
 app.get('/files', (req, res) => {  
   let returnObj = {};
-  returnObj.filenames = Object.keys(files);
+  //delete files older than 5 minutes
+  Object.keys(files).map((key) => {
+    if (Date.now() - files[key].created > (5 * 60 * 1000)) {
+      delete files[key];
+    }
+  });
+  returnObj.filenames = Object.keys(files);    
   returnObj.current = files.current;
   return res.json(returnObj);
 });
 
 app.get('/api/file/:filename', (req, res) => {
   files.current = files[req.params.filename];
-  return res.json(files[req.params.filename]);
+  return res.json(files.current);
 });
 
 app.post('/api/files', (req, res) => {

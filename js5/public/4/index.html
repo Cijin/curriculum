@@ -149,8 +149,9 @@
       return response.json();
     }).then((data) => {      
       allFiles = data.filenames.map((filename) => {
-        if(filename !== "current")
-        new File(filename)
+        if(filename !== "current") {
+          new File(filename)
+        }
       });
       if(data.current) {
         editor.setValue(data.current.content);
