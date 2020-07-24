@@ -3,6 +3,77 @@
 <script>
   const appContainer = document.querySelector('.app-container');
 
+  const renderSelection = () => {
+    appContainer.innerHTML = `
+      <h1>Enter Room Name</h1>
+      <input type="text" class="roomName" />
+      <button class="submit">Submit</button>
+    `;
+    const roomName = document.querySelector('.roomName');
+    const submit = document.querySelector('.submit');
+
+    submit.addEventListener('click', () => {
+      let name = roomName.value;
+      if (name) {
+        return window.location = `/chatroom/${name}`;
+      }
+      alert('Room name cannot be null');
+    });
+  };
+
+  const renderRoom = (roomName) => {
+    appContainer.innerHTML = `
+      <h1>Chatroom: ${roomName}</h1>
+      <input class="message" type="text" />
+      <hr />
+      <div class="messageContainer"></div>
+    `;
+    const message = document.querySelector('.message');
+    const messageContainer = document.querySelector('.messageContainer');
+    message.focus();
+
+    const sendMessage = (message) => {
+      const fetchOptions = {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': `Bearer ${jwtToken}`
+        },
+        body: JSON.stringify({ message: message })
+      }
+      fetch(`/api/${roomName}/messages`, fetchOptions);
+    };
+
+    const getMessages = () => {
+      fetch(`/api/${roomName}/messages`)
+        .then((res) => {
+          return res.json()
+        }).then((messages) => {
+          messageContainer.innerHTML = messages.reduce((acc, msg) => {
+            return acc + '<div><span class="name">' + msg.name + '</span>' + msg.message + '</div>';
+          }, '');
+          setTimeout(getMessages, 500);
+        });
+    }
+    getMessages();
+
+    message.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter' && message.value) {
+        sendMessage(message.value);
+        message.value = '';
+        return;
+      }
+    });
+  };
+
+  const render = () => {
+    const room = window.location.pathname.split('/')[2];
+    if (!room) {
+      return renderSelection();
+    }
+    return renderRoom(room);
+  };
+
   const setupLogin = () => {
     appContainer.innerHTML = `
       <h1>You must be logged in</h1>
@@ -35,7 +106,7 @@
         })
       };
 
-      fetch('https://js5.c0d3.com/auth/api/users', fetchOptions)
+      fetch('https://js5.c0d3.com/auth/api/sessions', fetchOptions)
         .then((response) => {
           return response.json()
         }).then((body) => {
@@ -107,11 +178,10 @@
   let jwtToken = localStorage.getItem('userjwt');
 
   const startApp = () => {
-    const fetchOptions = {
-      credentials: 'include',
+    const fetchOptions = {      
       'Authorization': `Bearer ${jwtToken}`
     };
-    fetch('https://js5.c0d3.com/auth/api/session', fetchOptions)
+    fetch('/api/session', fetchOptions)
       .then((response) => {
         return response.json()
       }).then((body) => {
