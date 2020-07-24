@@ -15,7 +15,7 @@
     submit.addEventListener('click', () => {
       let name = roomName.value;
       if (name) {
-        return window.location = `/chatroom/${name}`;
+        return window.location = `/${name}`;
       }
       alert('Room name cannot be null');
     });
@@ -34,7 +34,7 @@
 
     const sendMessage = (message) => {
       const fetchOptions = {
-        method: 'POST',
+        method: 'POST',        
         headers: {
           'content-type': 'application/json',
           'Authorization': `Bearer ${jwtToken}`
@@ -48,9 +48,9 @@
       fetch(`/api/${roomName}/messages`)
         .then((res) => {
           return res.json()
-        }).then((messages) => {
-          messageContainer.innerHTML = messages.reduce((acc, msg) => {
-            return acc + '<div><span class="name">' + msg.name + '</span>' + msg.message + '</div>';
+        }).then((data) => {
+          messageContainer.innerHTML = data.messages.reduce((acc, msg) => {
+            return acc + '<div><span class="name">' + globalUsername + ': ' + '</span>' + msg + '</div>';
           }, '');
           setTimeout(getMessages, 500);
         });
@@ -67,7 +67,7 @@
   };
 
   const render = () => {
-    const room = window.location.pathname.split('/')[2];
+    const room = window.location.pathname.split('/')[1];
     if (!room) {
       return renderSelection();
     }
@@ -179,7 +179,9 @@
 
   const startApp = () => {
     const fetchOptions = {      
-      'Authorization': `Bearer ${jwtToken}`
+      headers: {
+        'Authorization': `Bearer ${jwtToken}`
+      }
     };
     fetch('/api/session', fetchOptions)
       .then((response) => {
