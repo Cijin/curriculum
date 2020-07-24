@@ -1,0 +1,127 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/andybrewer/mvp/mvp.css">
+<main class="app-container"></main>
+<script>
+  const appContainer = document.querySelector('.app-container');
+
+  const setupLogin = () => {
+    appContainer.innerHTML = `
+      <h1>You must be logged in</h1>
+      <p>No account ? You can 
+        <a href="#" class="instead">Sign Up</a>
+      </p>
+      <input type="text" class="username" placeholder="Username" />
+      <input type="password" class="password" placeholder="Password" />
+      <button class="submit">Login</button>
+    `;
+    const username = document.querySelector('.username');
+    const password = document.querySelector('.password');
+    const instead = document.querySelector('.instead');
+    const submit = document.querySelector('.submit');
+
+    instead.addEventListener('click', () => {
+      setSignUp();
+    });
+
+    submit.addEventListener('click', () => {
+      const fetchOptions = {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: username.value,
+          password: btoa(password.value)
+        })
+      };
+
+      fetch('https://js5.c0d3.com/auth/api/users', fetchOptions)
+        .then((response) => {
+          return response.json()
+        }).then((body) => {
+          if (body.jwt && body.username) {
+            globalUsername = body.username;
+            jwtToken = body.jwt;
+            localStorage.setItem('userjwt', body.jwt);
+            render();
+          }
+        })
+    });
+  };
+
+  const setSignUp = () => {
+    appContainer.innerHTML = `
+      <h1>New Account!</h1>
+      <p>Already have an account? You can
+        <a href="#" class="instead">Login Here</a>
+      </p>
+      <input class="name" type="text" placeholder="Full Name">
+      <input class="username" type="text" placeholder="Username">
+      <input class="email" type="email" placeholder="Email">
+      <input class="password" type="password" placeholder="Password">
+      <button class="submit">Submit</button>
+    `;
+    const username = document.querySelector('.username');
+    const password = document.querySelector('.password');
+    const email = document.querySelector('.email');
+    const name = document.querySelector('.name');
+    const submit = document.querySelector('.submit');
+    const instead = document.querySelector('.instead');
+
+    instead.addEventListener('click', () => {
+      setupLogin();
+    });
+
+    submit.addEventListener('click', () => {
+      if (!username.value || !password.value || password.value.length < 4) {
+        return alert('Please enter all required fields. Passwords need to be longer than 5 Characters');
+      }
+
+      const fetchOptions = {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: username.value,
+          password: btoa(password.value),
+          name: name.value,
+          email: email.value
+        })
+      };
+      fetch('https://js5.c0d3.com/auth/api/users', fetchOptions)
+        .then((response) => {
+          return response.json()
+        }).then((body) => {
+          if (body.jwt && body.username) {
+            globalUsername = body.username;
+            jwtToken = body.jwt;
+            localStorage.setItem('userjwt', body.jwt);
+            render();
+          }
+        })
+    });
+  };
+
+  let jwtToken = localStorage.getItem('userjwt');
+
+  const startApp = () => {
+    const fetchOptions = {
+      credentials: 'include',
+      'Authorization': `Bearer ${jwtToken}`
+    };
+    fetch('https://js5.c0d3.com/auth/api/session', fetchOptions)
+      .then((response) => {
+        return response.json()
+      }).then((body) => {
+        if (body.username) {
+          globalUsername = body.username;
+          return render();
+        }
+        return setupLogin();
+      });
+  };
+
+  startApp();
+</script>
