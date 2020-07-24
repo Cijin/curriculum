@@ -14,7 +14,16 @@ fs.readFile(path.resolve(__dirname, "./fileInfo"), (err, data) => {
   if (data) {
     files = JSON.parse(data);
   }
-})
+});
+
+//delete files older than 5 minutes
+const clearFiles = () => {
+  Object.keys(files).map((key) => {
+    if (Date.now() - files[key].created > (5 * 60 * 1000)) {
+      delete files[key];
+    }
+  });
+};
 
 //middleware to see requests in console
 app.use(morgan('dev'));
@@ -26,12 +35,6 @@ app.get('/', (req, res) => {
 
 app.get('/files', (req, res) => {  
   let returnObj = {};
-  //delete files older than 5 minutes
-  Object.keys(files).map((key) => {
-    if (Date.now() - files[key].created > (5 * 60 * 1000)) {
-      delete files[key];
-    }
-  });
   returnObj.filenames = Object.keys(files);    
   returnObj.current = files.current;
   return res.json(returnObj);
@@ -58,5 +61,7 @@ app.post('/api/files', (req, res) => {
   );
   return res.sendStatus(201);
 });
+
+clearFiles();
 
 app.listen(process.env.PORT || 8123);
