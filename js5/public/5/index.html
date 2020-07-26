@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/andybrewer/mvp/mvp.css">
 <main class="app-container"></main>
 <script>
-  const appContainer = document.querySelector('.app-container');
+  const appContainer = document.querySelector('.app-container');  
 
   const renderSelection = () => {
     appContainer.innerHTML = `
@@ -11,6 +11,8 @@
     `;
     const roomName = document.querySelector('.roomName');
     const submit = document.querySelector('.submit');
+
+    roomName.focus();
 
     submit.addEventListener('click', () => {
       let name = roomName.value;
@@ -45,12 +47,15 @@
     };
 
     const getMessages = () => {
-      fetch(`/api/${roomName}/messages`)
-        .then((res) => {
+      fetch(`/api/${roomName}/messages`, { 
+        headers : {
+          'Authorization': `Bearer ${jwtToken}`
+        }
+      }).then((res) => {
           return res.json()
         }).then((data) => {
           messageContainer.innerHTML = data.messages.reduce((acc, msg) => {
-            return acc + '<div><span class="name">' + globalUsername + ': ' + '</span>' + msg + '</div>';
+            return acc + '<div><span class="name">' + msg.username + ': ' + '</span>' + msg.message + '</div>';
           }, '');
           setTimeout(getMessages, 500);
         });
@@ -110,8 +115,7 @@
         .then((response) => {
           return response.json()
         }).then((body) => {
-          if (body.jwt && body.username) {
-            globalUsername = body.username;
+          if (body.jwt && body.username) {            
             jwtToken = body.jwt;
             localStorage.setItem('userjwt', body.jwt);
             render();
@@ -166,7 +170,6 @@
           return response.json()
         }).then((body) => {
           if (body.jwt && body.username) {
-            globalUsername = body.username;
             jwtToken = body.jwt;
             localStorage.setItem('userjwt', body.jwt);
             render();
@@ -178,7 +181,7 @@
   let jwtToken = localStorage.getItem('userjwt');
 
   const startApp = () => {
-    const fetchOptions = {      
+    const fetchOptions = {
       headers: {
         'Authorization': `Bearer ${jwtToken}`
       }
@@ -186,9 +189,8 @@
     fetch('/api/session', fetchOptions)
       .then((response) => {
         return response.json()
-      }).then((body) => {
-        if (body.username) {
-          globalUsername = body.username;
+      }).then((data) => {
+        if (data.username) {
           return render();
         }
         return setupLogin();
