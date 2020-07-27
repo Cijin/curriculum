@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const uuid4 = require('uuid4');
 const express = require('express');
 
 const app = express();
