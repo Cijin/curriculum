@@ -17,14 +17,14 @@ fs.readFile(path.resolve(__dirname, "./fileInfo"), (err, data) => {
 });
 
 const clearFiles = () => {
-  Object.keys(files).map((key) => {
-    if (Date.now() - files[key].created > (5 * 60 * 1000)) {
-      delete files[key];
-    }
-  });
+  setTimeout(() => {
+    Object.keys(files).map((key) => {
+      if (Date.now() - files[key].created > (5 * 60 * 1000)) {
+        delete files[key];
+      }
+    });
+  }), (5 * 60 * 1000);  
 };
-//delete files older than 5 minutes
-setTimeout(clearFiles, (5 * 60 * 1000));
 
 //middleware to see requests in console
 app.use(morgan('dev'));
