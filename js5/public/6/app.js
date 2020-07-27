@@ -2,8 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
 const express = require('express');
 
 const app = express();
@@ -25,9 +23,6 @@ const writeFile = () => {
     JSON.stringify(usersInfo),
     () => {});
 };
-
-app.use(morgan('dev'));
-app.use(bodyParser.json());
 
 const session = (req, res) => {
   if (!req.get('authorization')) {
