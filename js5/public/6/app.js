@@ -1,3 +1,5 @@
+//Use this link to authenticate your apps https://authdomain.freedomains.dev/
+
 const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
