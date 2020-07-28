@@ -6,8 +6,16 @@
     "test": "node ./node_modules/jest/bin/jest.js -o --watch"
   },
   "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "jest": "^26.1.0",
+    "jimp": "^0.14.0",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.4",
+    "uuid": "^8.2.0",
     "webpack": "^4.41.2"
   },
   "devDependencies": {
