@@ -1,9 +1,21 @@
 const express = require('express');
-const multer = require('multer');
-const Tesseract = require('tesseract.js');
+const path = require('path');
+const { createWorker } = require('tesseract.js');
 const app = express();
+const bodyParser = require('body-parser');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
+app.use(bodyParser.json());
 
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'index.html'));
+});
+
+app.post('/files', upload.array('userFiles'), (req, res) => {  
+  console.log(req.file);
+  res.sendStatus(200);
+});
 
 
 app.listen(process.env.PORT || 8123, () => {
