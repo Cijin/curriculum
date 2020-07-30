@@ -5,7 +5,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const multer = require('multer');
-const upload = multer({ dest: './uploads/' });
+const upload = multer({ dest: path.resolve(__dirname, 'uploads') });
 
 app.use(bodyParser.json());
 app.use(morgan('dev'));
