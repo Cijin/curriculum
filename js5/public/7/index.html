@@ -14,8 +14,10 @@
   </form>
 </div>
 <script>
+  const container = document.querySelector('.container');
   const button = document.querySelector('.submit');
   button.addEventListener('click', () => {
     document.querySelector('.uploadForm').submit();
+    container.innerHTML = '<h1>You will be redirected soon...</h1>';
   });
 </script>
