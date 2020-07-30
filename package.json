@@ -14,7 +14,9 @@
     "jimp": "^0.14.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
+    "multer": "^1.4.2",
     "nodemon": "^2.0.4",
+    "tesseract.js": "^2.1.1",
     "uuid": "^8.2.0",
     "webpack": "^4.41.2"
   },
