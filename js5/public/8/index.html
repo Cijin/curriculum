@@ -1,17 +1,52 @@
-<video class="video"></video>
-<button class="picButton">Take Selfie</button>
-<canvas class="canvas"></canvas>
+<style>
+  .button.hidden {
+    display: none;
+  }
+</style>
+
+<video class="video" width=640 height=480></video>
+<canvas class="canvas" width=640 height=480></canvas>
+<button class="button hidden">Take Selfie</button>
+<hr>
+<h2>Image Url's</h2>
+<div class="urlsContainer"></div>
 
 <script>
   const canvas = document.querySelector('.canvas');
   const context = canvas.getContext('2d');
   const videElement = document.querySelector('.video');
+  const urlsContainer = document.querySelector('.urlsContainer');
+  const button = document.querySelector('.button');
 
   navigator.mediaDevices.getUserMedia({
     video: true,
-    audio: true
+    audio: false
   }).then((stream) => {
     videElement.srcObject = stream;
     videElement.play();
-  })
+    button.classList.remove('hidden');
+  });
+
+  button.addEventListener('click', () => {    
+    context.drawImage(videElement, 0, 0);
+
+    const imageData = canvas.toDataURL();
+    const b64Data = imageData.replace(/^data:image\/png;base64,/, "");
+    const fetchOptions = {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({ img: b64Data })
+    };
+
+    fetch('/api/images', fetchOptions)
+      .then((response) => {
+        return response.json()
+      }).then((data) => {
+        const url = data.link;
+        return urlsContainer.innerHTML += `<div><a href="${url}">
+          ${url}</a></div>`;
+      });
+  });
 </script>
