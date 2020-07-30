@@ -3,10 +3,12 @@ const path = require('path');
 const { createWorker } = require('tesseract.js');
 const app = express();
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: './uploads/' });
 
 app.use(bodyParser.json());
+app.use(morgan('dev'));
 
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'index.html'));

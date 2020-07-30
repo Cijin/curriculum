@@ -49,6 +49,7 @@ document.body.addEventListener('drop', (e) => {
 	fetch('/files', {
 		method: 'POST',
 		body: formData
-	});
+	})
+  return clearScreen(e);
 });
 </script>
