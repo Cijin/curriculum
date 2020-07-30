@@ -21,13 +21,13 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/image/:imageId', (req, res) => {
-  let imageId = req.params.imageId;
+  let imageId = req.params.imageId.split('.')[0];
   if (imgObj[imageId]) {
     let img = Buffer.from(imgObj[imageId], 'base64');
     res.writeHead(200, {
-    'Content-Type': 'image/png',
-    'Content-Length': img.length
-  });
+      'Content-Type': 'image/png',
+      'Content-Length': img.length
+    });
     return res.end(img);    
   }
   return res.sendStatus(404);
@@ -38,10 +38,11 @@ app.post('/api/images', (req, res) => {
   if (!imgData) {
     res.sendStatus(400);
   }
-  const id = uuidv4() + '.png';
+  const id = uuidv4();
   imgObj[id] = imgData;
-  let link = `http://${req.hostname}:${PORT}/api/image/${id}`;
-
+  let link = `http://${req.hostname}:${PORT}/api/image/${id}.png`;
+  
+  writeImage(imgData);
   return res.status(200).json({link});
 });
 
