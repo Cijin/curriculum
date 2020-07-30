@@ -1,5 +1,4 @@
 //Use this link to authenticate your apps https://authdomain.freedomains.dev/
-
 const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
@@ -15,16 +14,15 @@ let usersInfo = {};
 const secretKey = "Very Secret Key!";
 const saltRounds = 10;
 
-const readFromFile = () => {
-  fs.readFile(path.resolve(__dirname, "userData"), (err, data) => {
-    if (err) {
-      console.log("Error reading file");
-    }
-    if (data) {
-      usersInfo = JSON.parse(data.toString());
-    }
-  });
-};
+
+fs.readFile(path.resolve(__dirname, "userData"), (err, data) => {
+  if (err) {
+    console.log("Error reading file");
+  }
+  if (data) {
+    usersInfo = JSON.parse(data.toString());
+  }
+});
 
 const writeToFile = () => {
   fs.writeFile(path.resolve(__dirname, "userData"),
@@ -57,9 +55,7 @@ app.get('/api/sessions', (req, res) => {
 
 app.post('/api/sessions', (req, res) => {
   const username = req.body.username;
-  const password = req.body.password;
-  
-  readFromFile();
+  const password = req.body.password;  
 
   if (!usersInfo[username]) {
     return res.status(400).send("Please enter a valid username");
