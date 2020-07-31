@@ -49,7 +49,6 @@ app.post('/files', upload.single('userFiles'), (req, res) => {
       job[id].text = text;
       return res.redirect(`/files/${id}`);
     });
-  return res.status(202)
 });
 
 app.get('/files/:jobId', (req, res) => {
