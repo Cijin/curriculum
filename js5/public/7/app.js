@@ -28,6 +28,7 @@ const removeOldFiles = () => {
         });
       });
     })
+    removeOldFiles();
   }, 5 * 60 * 1000);
 };
 
