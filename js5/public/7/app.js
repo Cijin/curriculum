@@ -18,7 +18,6 @@ const removeOldFiles = () => {
       if (err) {
         console.log("Error: ", err);
       }
-
       Array.from(files).forEach((file) => {
         fs.unlink(path.resolve(directory, file), (err) => {
           if (err) {
