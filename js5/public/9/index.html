@@ -12,8 +12,10 @@
     `;
 
     const username = document.querySelector('.username');
+    username.focus();
     const submit = document.querySelector('.submit');
-    const handleClick = () => {
+    
+    const submitEvent = (e) => {
       if (!username.value) {
         return;
       }
@@ -37,7 +39,16 @@
             render();
           }
         });
-    }
+      username.value = '';
+    };
+
+    submit.addEventListener('click', submitEvent);
+    username.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') {
+        submitEvent();
+      }
+      return;
+    });
   };
 
   let jwtToken = localStorage.getItem('userjwt');
@@ -47,12 +58,15 @@
         'Authorization': `Bearer ${jwtToken}`
       }
     }).then((response) => {
+      if (!response.ok) {
+        return new Promise((resolve) => resolve([]));
+      }     
       return response.json()
     }).then((body) => {
-      if (body.username) {
-        return render();
+      if (!body.username) {
+        return setupLogin();
       }
-      return setupLogin();
+      return render();
     });
   };
 

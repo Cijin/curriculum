@@ -2,6 +2,8 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const jwt = require('jsonwebtoken');
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 
@@ -13,12 +15,20 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/session', (req, res) => {
-  //TODO: decode jwt token to return a json body with username
+  if (!req.get('authorization')) {
+    return res.status(400).send("Missing Token, Please Login :)");
+  }
+  const token = req.get('authorization').split(" ")[1];
+  const body = jwt.decode(token);
+  if (!body) {
+    return res.sendStatus(400);
+  }
+  return res.status(200).json(body);
 });
 
 app.post('/api/session', (req, res) => {
   //TODO: create a new jwt token for the current user
-  //or return an existing one if one exists  
+  //or return an existing one if one exists    
 });
 
 app.listen(process.env.PORT || 8123, () => {
