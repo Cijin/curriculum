@@ -14,8 +14,7 @@ const job = {};
 
 const removeOldFiles = () => {
   const directory = path.resolve(__dirname, 'uploads');
-  fs.readdir(directory, (err, files) => {
-  setTimeout(() => {  
+  fs.readdir(directory, (err, files) => {  
       if (err) {
         console.log("Error: ", err);
       }
@@ -27,13 +26,11 @@ const removeOldFiles = () => {
           }          
         });
       });
-    })
-    removeOldFiles();
-  }, 5 * 60 * 1000);
+    });  
 };
 
 //delete old files every five minutes
-removeOldFiles();
+setTimeout(removeOldFiles, 5 * 60 * 1000);
 
 app.use(morgan('dev'));
 
