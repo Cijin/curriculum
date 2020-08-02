@@ -25,7 +25,8 @@ const removeOldFiles = () => {
           }          
         });
       });
-    });  
+    });
+    setTimeout(removeOldFiles, 5 * 60 * 1000); 
 };
 
 //delete old files every five minutes
