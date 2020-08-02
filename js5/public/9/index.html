@@ -59,7 +59,7 @@
       }
     }).then((response) => {
       if (!response.ok) {
-        return new Promise((resolve) => resolve([]));
+        return new Promise((resolve) => resolve({}));
       }     
       return response.json()
     }).then((body) => {

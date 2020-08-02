@@ -16,12 +16,12 @@ app.get('/', (req, res) => {
 
 app.get('/api/session', (req, res) => {
   if (!req.get('authorization')) {
-    return res.status(400).send("Missing Token, Please Login :)");
+    return res.status(403).send("Missing Token, Please Login :)");
   }
   const token = req.get('authorization').split(" ")[1];
   const body = jwt.decode(token);
   if (!body) {
-    return res.sendStatus(400);
+    return res.sendStatus(403);
   }
   return res.status(200).json(body);
 });
