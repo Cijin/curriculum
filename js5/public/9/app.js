@@ -3,9 +3,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const jwt = require('jsonwebtoken');
-const { v4: uuidv4 } = require('uuid');
 
 const app = express();
+const userTokens = {};
+const secretKey = "Super Secret Shh..."
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
@@ -26,9 +27,22 @@ app.get('/api/session', (req, res) => {
   return res.status(200).json(body);
 });
 
-app.post('/api/session', (req, res) => {
-  //TODO: create a new jwt token for the current user
-  //or return an existing one if one exists    
+app.post('/api/session', (req, res) => {  
+  const username = req.body.username;
+  if (!username) {
+    return res.status(400).send("Username cannot be empty!");
+  }
+  if (userTokens[username]) {
+    return res.status(200).json({
+      username: username,
+      jwt: userTokens[username].jwt
+    });
+  }
+  const token = jwt.sign({username}, secretKey);
+  return res.status(200).json({
+    username: username,
+    jwt: token
+  });
 });
 
 app.listen(process.env.PORT || 8123, () => {
