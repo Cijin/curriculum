@@ -22,7 +22,12 @@ app.post('/api/meme', (req, res) => {
   if (!imageData) {
     return res.sendStatus(400);
   }
-})
+  //TODO: 
+  //use gm to create image with text
+  //add to file and object
+  //send data
+  //handle updating image in frontend
+});
 
 app.get('/api/session', (req, res) => {
   if (!req.get('authorization')) {
