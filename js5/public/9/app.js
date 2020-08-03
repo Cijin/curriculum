@@ -1,8 +1,10 @@
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const jwt = require('jsonwebtoken');
+const gm = require('gm');
 
 const app = express();
 const userTokens = {};
@@ -16,7 +18,10 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/meme', (req, res) => {
-  //TODO: path to accept memes
+  const imageData = Buffer.from(req.body.b64Data, 'base64');
+  if (!imageData) {
+    return res.sendStatus(400);
+  }
 })
 
 app.get('/api/session', (req, res) => {
