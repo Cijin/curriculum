@@ -1,3 +1,8 @@
+//TODO:
+//check if /api/meme works as intended
+//figure out a way to load all images on render
+//front-end ask for images every few seconds as they update
+//  also figure out how to add images to the front end as they are sent
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
@@ -5,6 +10,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const jwt = require('jsonwebtoken');
 const gm = require('gm');
+const { nextTick } = require('process');
 
 const app = express();
 const userTokens = {};
@@ -13,23 +19,7 @@ const secretKey = "Super Secret Key"
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'index.html'));
-});
-
-app.post('/api/meme', (req, res) => {
-  const imageData = Buffer.from(req.body.b64Data, 'base64');
-  if (!imageData) {
-    return res.sendStatus(400);
-  }
-  //TODO: 
-  //use gm to create image with text
-  //add to file and object
-  //send data
-  //handle updating image in frontend
-});
-
-app.get('/api/session', (req, res) => {
+const session = (req, res, next) => {
   if (!req.get('authorization')) {
     return res.status(403).send("Missing Token, Please Login :)");
   }
@@ -38,7 +28,30 @@ app.get('/api/session', (req, res) => {
   if (!body) {
     return res.sendStatus(403);
   }
-  return res.status(200).json(body);
+  req.user = body.username;
+  req.token = body;
+  next();
+}
+
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'index.html'));
+});
+
+app.post('/api/meme', session, (req, res) => {
+  const imageData = Buffer.from(req.body.b64Data, 'base64');
+  if (!imageData) {
+    return res.sendStatus(400);
+  }
+  
+  gm(imageData).fontSize(70).stroke('#ffffff')
+    .drawText(0, 200, req.body.text)
+    .write(path.resolve(__dirname, `chatImages/${req.user} + .png`));
+
+  return res.sendStatus(200);
+});
+
+app.get('/api/session', session, (req, res) => {  
+  return res.status(200).json(req.token);
 });
 
 app.post('/api/session', (req, res) => {  
