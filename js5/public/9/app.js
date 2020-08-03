@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const app = express();
 const userTokens = {};
-const secretKey = "Super Secret Shh..."
+const secretKey = "Super Secret Key"
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
@@ -14,6 +14,10 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'index.html'));
 });
+
+app.post('/api/meme', (req, res) => {
+  //TODO: path to accept memes
+})
 
 app.get('/api/session', (req, res) => {
   if (!req.get('authorization')) {

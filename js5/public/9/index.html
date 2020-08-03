@@ -1,8 +1,90 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/andybrewer/mvp/mvp.css">
-<main class="app-container"></main>
+<style>
+  .chatContainer {
+    display: flexbox;
+    justify-content: space-evenly;
+  }
 
+  .memeText {
+    margin-top: 20px;
+  }
+
+  .hidden {
+    display: none;
+  }
+</style>
+
+<main class="app-container"></main>
 <script>
   const appContainer = document.querySelector('.app-container');
+
+  const render = () => {
+    appContainer.innerHTML = `
+      <h1>Welcome to MemeChat!</h1>
+      <hr>
+      <div class="chatContainer"></div>
+      <hr>
+      <h2>New Meme</h2>
+      <video class="videoSrc" width=640 height=480></video>
+      <input class="memeText" type="text" />
+      <button class="submitButton hidden">Update Chat</button>
+      <canvas class="canvas hidden" width=640 height=480></canvas>
+    `;
+
+    const videoSrc = document.querySelector('.videoSrc');
+    const memeText = document.querySelector('.memeText');
+    const submitButton = document.querySelector('.submitButton');
+    const chatContainer = document.querySelector('.chatContainer');
+    const canvas = document.querySelector('.canvas');
+    const context = canvas.getContext('2d');
+
+    memeText.focus();
+
+    navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false
+    }).then((stream) => {
+      videoSrc.srcObject = stream;
+      videoSrc.play();
+      submitButton.classList.remove('hidden');
+    });
+
+    const handleSubmit = () => {
+      context.drawImage(videoSrc, 0, 0);
+      const imageData = context.toDataUrl();
+      const b64Data = imageData.replace(/^data:image\/png;base64,/, "");
+
+      const fetchOptions = {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'content-type': 'application/json',
+          'authorization': `Bearer ${userjwt}`
+        },
+        body: JSON.stringify({
+          text: memeText.valuej,
+          b64Data: b64Data
+        })
+      };
+      fetch('/api/meme', fetchOptions);
+      
+      memeText.value = '';
+    };
+
+    memeText.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter' && memeText.value) {
+        return handleSubmit();
+      }
+      return;
+    });
+
+    submitButton.addEventListener('click', () => {
+      if (memeText.value) {
+        return handleSubmit();
+      }
+      return;
+    });
+  };
 
   const setupLogin = () => {
     appContainer.innerHTML = `
