@@ -1,5 +1,4 @@
 //TODO:
-//check if /api/meme works as intended
 //figure out a way to load all images on render
 //front-end ask for images every few seconds as they update
 //  also figure out how to add images to the front end as they are sent
@@ -9,15 +8,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const jwt = require('jsonwebtoken');
-const gm = require('gm');
-const { nextTick } = require('process');
+const gm = require('gm').subClass({ imageMagick: true });
 
 const app = express();
-const userTokens = {};
+const userData = {};
 const secretKey = "Super Secret Key"
 
 app.use(morgan('dev'));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "5mb", extended: true }));
+app.use(express.static('9'));
 
 const session = (req, res, next) => {
   if (!req.get('authorization')) {
@@ -37,25 +36,34 @@ app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'index.html'));
 });
 
+app.get('/api/session', session, (req, res) => {  
+  return res.status(200).json(req.token);
+});
+
+app.get('/api/images', session, (req, res) => {
+  return res.status(200).json(userData);
+});
+
 app.post('/api/meme', session, (req, res) => {
   const imageData = Buffer.from(req.body.b64Data, 'base64');
-  const filename = req.user + '.png';
+  const filename = req.user + '.png';  
+  const username = req.user;
 
-  if (!imageData) {
+  if (!imageData || !req.body.text) {
     return res.sendStatus(400);
   }
   gm(imageData).fontSize(20).stroke('#ffffff')
-    .drawText(0, 50, req.body.text)
+    .drawText(50, 50, req.body.text)
     .write(path.resolve(__dirname, `chatImages/${filename}`), (err) => {
       if (err) {
-        console.log(err);        
+        console.log(err);
+        return res.sendStatus(500);       
       }
     });
-  return res.sendStatus(200);
-});
-
-app.get('/api/session', session, (req, res) => {  
-  return res.status(200).json(req.token);
+    if (!userData[username])
+      userData[username] = {};
+    userData[username].imageSrc = `/chatImages/${filename}`;
+  return res.sendStatus(201);
 });
 
 app.post('/api/session', (req, res) => {  
@@ -63,13 +71,14 @@ app.post('/api/session', (req, res) => {
   if (!username) {
     return res.status(400).send("Username cannot be empty!");
   }
-  if (userTokens[username]) {
+  if (userData[username]) {
     return res.status(200).json({
       username: username,
-      jwt: userTokens[username].jwt
+      jwt: userData[username].jwt
     });
   }
   const token = jwt.sign({username}, secretKey);
+  userData[username].jwt = token;
   return res.status(200).json({
     username: username,
     jwt: token
