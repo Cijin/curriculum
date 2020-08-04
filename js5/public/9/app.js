@@ -1,5 +1,4 @@
 //TODO:
-//figure out a way to load all images on render
 //front-end ask for images every few seconds as they update
 //  also figure out how to add images to the front end as they are sent
 const path = require('path');
@@ -16,7 +15,7 @@ const secretKey = "Super Secret Key"
 
 app.use(morgan('dev'));
 app.use(bodyParser.json({ limit: "5mb", extended: true }));
-app.use(express.static('9'));
+app.use(express.static('chatImages'));
 
 const session = (req, res, next) => {
   if (!req.get('authorization')) {
@@ -62,7 +61,7 @@ app.post('/api/meme', session, (req, res) => {
     });
     if (!userData[username])
       userData[username] = {};
-    userData[username].imageSrc = `/chatImages/${filename}`;
+    userData[username].imageSrc = `/${filename}`;
   return res.sendStatus(201);
 });
 
