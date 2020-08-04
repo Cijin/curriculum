@@ -17,6 +17,7 @@
 <main class="app-container"></main>
 <script>
   const appContainer = document.querySelector('.app-container');
+  let jwtToken = localStorage.getItem('userjwt');
 
   const render = () => {
     appContainer.innerHTML = `
@@ -24,7 +25,7 @@
       <hr>
       <div class="chatContainer"></div>
       <hr>
-      <h2>New Meme</h2>
+      <h2>Create New Meme</h2>
       <video class="videoSrc" width=640 height=480></video>
       <input class="memeText" type="text" />
       <button class="submitButton hidden">Update Chat</button>
@@ -36,7 +37,7 @@
     const submitButton = document.querySelector('.submitButton');
     const chatContainer = document.querySelector('.chatContainer');
     const canvas = document.querySelector('.canvas');
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d');    
 
     memeText.focus();
 
@@ -51,7 +52,7 @@
 
     const handleSubmit = () => {
       context.drawImage(videoSrc, 0, 0);
-      const imageData = context.toDataUrl();
+      const imageData = canvas.toDataURL();
       const b64Data = imageData.replace(/^data:image\/png;base64,/, "");
 
       const fetchOptions = {
@@ -59,7 +60,7 @@
         credentials: 'include',
         headers: {
           'content-type': 'application/json',
-          'authorization': `Bearer ${userjwt}`
+          'authorization': `Bearer ${jwtToken}`
         },
         body: JSON.stringify({
           text: memeText.valuej,
@@ -132,8 +133,7 @@
       return;
     });
   };
-
-  let jwtToken = localStorage.getItem('userjwt');
+  
   const startApp = () => {
     fetch('/api/session', {
       headers: {

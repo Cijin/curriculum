@@ -39,14 +39,18 @@ app.get('/', (req, res) => {
 
 app.post('/api/meme', session, (req, res) => {
   const imageData = Buffer.from(req.body.b64Data, 'base64');
+  const filename = req.user + '.png';
+
   if (!imageData) {
     return res.sendStatus(400);
   }
-  
-  gm(imageData).fontSize(70).stroke('#ffffff')
-    .drawText(0, 200, req.body.text)
-    .write(path.resolve(__dirname, `chatImages/${req.user} + .png`));
-
+  gm(imageData).fontSize(20).stroke('#ffffff')
+    .drawText(0, 50, req.body.text)
+    .write(path.resolve(__dirname, `chatImages/${filename}`), (err) => {
+      if (err) {
+        console.log(err);        
+      }
+    });
   return res.sendStatus(200);
 });
 
