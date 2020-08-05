@@ -46,6 +46,7 @@
 
     this.changeSource = (newSource) => {
       if (newSource !== source) {
+        newSource = newSource.split("?")[0];
         element.src = newSource;
       }
       return;
