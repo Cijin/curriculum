@@ -1,3 +1,13 @@
+<!-- 
+  In script:
+    function Image: a class that facilitates adding memes to the DOM
+      all images are initially appended to the hidden div
+      changeSource: updates src as user adds new memes
+
+    function render: renders all the elements after login     
+      getmemes: sends a get request every second to get all memes
+      handlesubmit: sends a post request to create new meme
+-->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/andybrewer/mvp/mvp.css">
 <style>
   .chatContainer {
@@ -16,6 +26,7 @@
   .squareImage {
     height: 300px;
     width: 300px;
+    margin-right: 10px;
   }
 </style>
 
@@ -25,25 +36,34 @@
   let jwtToken = localStorage.getItem('userjwt');
   const userImages = {};
 
-  function Image(source, container) {
+  function Image(source, container) {    
+    source = source.split("?")[0];
     const element = document.createElement('img');
     element.src = source;
     element.classList.add('squareImage');
+
     container.appendChild(element);
-   
+
+    this.changeSource = (newSource) => {
+      if (newSource !== source) {
+        element.src = newSource;
+      }
+      return;
+    };
   };
 
   const render = () => {
     appContainer.innerHTML = `
-      <h1>Welcome to MemeChat!</h1>            
+      <h1>Welcome to MemeChat!</h1> 
+      <hr>
+      <h3>Memes!</h3>
+      <div class="chatContainer"></div>
+      <hr>           
       <h3>Create New Meme</h2>
       <video class="videoSrc" width=640 height=480></video>
       <input class="memeText" type="text" placeholder="Meme Here :P" />
       <button class="submitButton hidden">Update Chat</button>
-      <canvas class="canvas hidden" width=640 height=480></canvas>
-      <hr>
-      <h3>Memes!</h3>
-      <div class="chatContainer"></div>
+      <canvas class="canvas hidden" width=640 height=480></canvas>      
       <div class="hiddenContainer hidden"></div>
     `;
 
@@ -77,9 +97,17 @@
         .then((res) => res.json())
         .then((data) => {
           Object.keys(data).forEach((key) => {
-            userImages[key] = new Image(data[key].imageSrc, chatContainer);
+            if (!userImages[key]) {              
+              userImages[key] = new Image(data[key].imageSrc, hiddenContainer);
+            }
+            else {
+              userImages[key].changeSource(data[key].imageSrc);
+            }
           });
-        });
+
+          chatContainer.innerHTML = hiddenContainer.innerHTML;
+          setTimeout(getMemes, 1000);
+        });      
     };
 
     getMemes();

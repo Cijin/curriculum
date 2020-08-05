@@ -1,6 +1,19 @@
-//TODO:
-//front-end ask for images every few seconds as they update
-//  also figure out how to add images to the front end as they are sent
+/*
+  visit https://js5solutions.freedomains.dev/ for solution
+
+  Considering the size of the files, I thought it would be useful to have
+  detailed documentation for the reviewer.There is an explanation just like 
+  this one on top of the HTML file as well.
+
+  Middleware Session: adds req.user and req.token to all incoming paths 
+    as they are checked everytime a request is sent
+    
+  app.get('/api/images'): sends back current data on all users
+
+  app.post('/api/meme'): Gets base64 data and text from user and
+    combines them to file as username.png
+    Also creates a imageSrc key for later use to send back to client
+*/
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
@@ -10,12 +23,21 @@ const jwt = require('jsonwebtoken');
 const gm = require('gm').subClass({ imageMagick: true });
 
 const app = express();
-const userData = {};
+let userData = {};
 const secretKey = "Super Secret Key"
+
+fs.readFile(path.resolve(__dirname, "userInfo"), (err, data) => {
+  if (err) {
+    console.log("File Read Error: ", err);
+  }
+  if (data) {
+    userData = JSON.parse(data.toString());
+  }
+});
 
 app.use(morgan('dev'));
 app.use(bodyParser.json({ limit: "5mb", extended: true }));
-app.use(express.static('chatImages'));
+app.use(express.static(path.resolve(__dirname, 'chatImages')));
 
 const session = (req, res, next) => {
   if (!req.get('authorization')) {
@@ -51,7 +73,7 @@ app.post('/api/meme', session, (req, res) => {
   if (!imageData || !req.body.text) {
     return res.sendStatus(400);
   }
-  gm(imageData).fontSize(20).stroke('#ffffff')
+  gm(imageData).fontSize(40).stroke('#ffffff')
     .drawText(50, 50, req.body.text)
     .write(path.resolve(__dirname, `chatImages/${filename}`), (err) => {
       if (err) {
@@ -59,10 +81,16 @@ app.post('/api/meme', session, (req, res) => {
         return res.sendStatus(500);       
       }
     });
-    if (!userData[username])
+    if (!userData[username]) {
       userData[username] = {};
-    userData[username].imageSrc = `/${filename}`;
-  return res.sendStatus(201);
+    }
+    userData[username].imageSrc = `/${filename}?${Date.now()}`;
+
+    fs.writeFile(path.resolve(__dirname, "userInfo"),
+      JSON.stringify(userData), 
+      () => {});
+
+    return res.sendStatus(201);
 });
 
 app.post('/api/session', (req, res) => {  
@@ -76,8 +104,10 @@ app.post('/api/session', (req, res) => {
       jwt: userData[username].jwt
     });
   }
+  userData[username] = {};
   const token = jwt.sign({username}, secretKey);
   userData[username].jwt = token;
+
   return res.status(200).json({
     username: username,
     jwt: token
