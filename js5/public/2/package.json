@@ -1,0 +1,20 @@
+{
+  "name": "js5solution2.freedomains.dev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "deploy.config.js",
+  "scripts": {
+    "start:myproxy": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "myproxy@freedomains.dev:/home/myproxy/js5solution2.freedomains.dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  }
+}
