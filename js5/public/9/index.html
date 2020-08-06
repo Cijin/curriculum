@@ -10,7 +10,7 @@
 -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/andybrewer/mvp/mvp.css">
 <style>
-  .chatContainer {
+  .chatContainer, .hiddenContainer {
     display: flexbox;
     justify-content: space-evenly;
   }
@@ -35,17 +35,25 @@
   const appContainer = document.querySelector('.app-container');
   let jwtToken = localStorage.getItem('userjwt');
   const userImages = {};
+  let loadCounter = 0;
 
   function Image(source, container) {    
     const element = document.createElement('img');
     element.src = `${source}?${Date.now()}`;
     element.classList.add('squareImage');
-
     container.appendChild(element);
 
     this.changeSource = (newSource) => {      
       element.src = `${newSource}?${Date.now()}`;    
     };
+
+    element.addEventListener('load', () => {
+      loadCounter += 1;
+    });
+
+    this.delete = () => {
+      element.remove();
+    }
   };
 
   const render = () => {
@@ -54,13 +62,13 @@
       <hr>
       <h3>Memes!</h3>
       <div class="chatContainer"></div>
+      <div class="hiddenContainer hidden"></div>
       <hr>           
       <h3>Create New Meme</h2>
       <video class="videoSrc" width=640 height=480></video>
       <input class="memeText" type="text" placeholder="Meme Here :P" />
       <button class="submitButton hidden">Update Chat</button>
-      <canvas class="canvas hidden" width=640 height=480></canvas>      
-      <div class="hiddenContainer hidden"></div>
+      <canvas class="canvas hidden" width=640 height=480></canvas>            
     `;
 
     const videoSrc = document.querySelector('.videoSrc');
@@ -69,7 +77,7 @@
     const chatContainer = document.querySelector('.chatContainer');
     const hiddenContainer = document.querySelector('.hiddenContainer');
     const canvas = document.querySelector('.canvas');
-    const context = canvas.getContext('2d'); 
+    const context = canvas.getContext('2d');
 
     memeText.focus();
 
@@ -100,8 +108,14 @@
               userImages[key].changeSource(data[key].imageSrc);
             }
           });
-
-          chatContainer.innerHTML = hiddenContainer.innerHTML;
+          
+          const totalImages = Object.keys(userImages).length;
+          if(loadCounter === totalImages) {
+            loadCounter = -1;
+            chatContainer.innerHTML = hiddenContainer.innerHTML;
+            chatContainer.classList.toggle('hidden');
+            hiddenContainer.classList.toggle('hidden');                        
+          }
           setTimeout(getMemes, 1000);
         });      
     };

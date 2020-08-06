@@ -1,7 +1,5 @@
 /*
   visit https://js5solutions.freedomains.dev/ for solution
-  Disclaimer: althought seems to be working fine on localhost,
-  can't get it work on freedomains.dev 
 
   Considering the size of the files, I thought it would be useful to have
   detailed documentation for the reviewer.There is an explanation just like 
