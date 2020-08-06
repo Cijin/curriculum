@@ -37,19 +37,14 @@
   const userImages = {};
 
   function Image(source, container) {    
-    source = source.split("?")[0];
     const element = document.createElement('img');
-    element.src = source;
+    element.src = `${source}?${Date.now()}`;
     element.classList.add('squareImage');
 
     container.appendChild(element);
 
-    this.changeSource = (newSource) => {
-      if (newSource !== source) {
-        newSource = newSource.split("?")[0];
-        element.src = newSource;
-      }
-      return;
+    this.changeSource = (newSource) => {      
+      element.src = `${newSource}?${Date.now()}`;    
     };
   };
 

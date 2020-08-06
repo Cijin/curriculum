@@ -86,7 +86,7 @@ app.post('/api/meme', session, (req, res) => {
     if (!userData[username]) {
       userData[username] = {};
     }
-    userData[username].imageSrc = `/${filename}?${Date.now()}`;
+    userData[username].imageSrc = `/${filename}`;
 
     fs.writeFile(path.resolve(__dirname, "userInfo"),
       JSON.stringify(userData), 
