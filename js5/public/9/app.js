@@ -51,7 +51,7 @@ const session = (req, res, next) => {
   req.user = body.username;
   req.token = body;
   next();
-}
+};
 
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'index.html'));
@@ -87,7 +87,7 @@ app.post('/api/meme', session, (req, res) => {
     userData[username].imageSrc = `/${filename}`;
 
     fs.writeFile(path.resolve(__dirname, "userInfo"),
-      JSON.stringify(userData), 
+      JSON.stringify(userData),
       () => {});
 
     return res.sendStatus(201);
@@ -97,17 +97,9 @@ app.post('/api/session', (req, res) => {
   const username = req.body.username;
   if (!username) {
     return res.status(400).send("Username cannot be empty!");
-  }
-  if (userData[username]) {
-    return res.status(200).json({
-      username: username,
-      jwt: userData[username].jwt
-    });
-  }
+  }  
   userData[username] = {};
-  const token = jwt.sign({username}, secretKey);
-  userData[username].jwt = token;
-
+  const token = jwt.sign({username}, secretKey);  
   return res.status(200).json({
     username: username,
     jwt: token
