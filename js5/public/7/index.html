@@ -1,0 +1,23 @@
+<style>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed; top: 0; bottom: 0; left: 0; right: 0;
+}
+
+</style>
+<div class="container">  
+  <form action="/files" method="post" enctype="multipart/form-data" class="uploadForm">
+    <input type="file" name="userFiles" />    
+    <button class="submit" >Extract Text</button>
+  </form>
+</div>
+<script>
+  const container = document.querySelector('.container');
+  const button = document.querySelector('.submit');
+  button.addEventListener('click', () => {
+    document.querySelector('.uploadForm').submit();
+    container.innerHTML = '<h1>You will be redirected soon...</h1>';
+  });
+</script>
