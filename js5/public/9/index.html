@@ -101,16 +101,17 @@
             if (!userImages[key] && data[key].imageSrc) {              
               userImages[key] = new Image(data[key].imageSrc, hiddenContainer);
             }
-            if (userImages[key] && data[key].imageSrc) {
+            if (data[key].imageSrc) {
               userImages[key].changeSource(data[key].imageSrc);
             }
           });                                                   
         });
         const totalImages = Object.keys(userImages).length;                    
-        if(loadCounter >= totalImages) {            
+        if(loadCounter > totalImages && hiddenContainer.innerHTML) {
           loadCounter = 0;
-          chatContainer.innerHTML = hiddenContainer.innerHTML;                                  
-        }      
+            chatContainer.innerHTML = hiddenContainer.innerHTML;
+            hiddenContainer.innerHTML = "";                      
+        }     
       setTimeout(getMemes, 1000);
     };
 
