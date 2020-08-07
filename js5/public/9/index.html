@@ -34,24 +34,7 @@
 <main class="app-container"></main>
 <script>
   const appContainer = document.querySelector('.app-container');
-  let jwtToken = localStorage.getItem('userjwt');
-  const userImages = {};
-  let loadCounter = 0;
-
-  function Image(source, container) {    
-    const element = document.createElement('img');
-    element.src = `${source}?${Date.now()}`;
-    element.classList.add('squareImage');
-    container.appendChild(element);
-
-    this.changeSource = (newSource) => {      
-      element.src = `${newSource}?${Date.now()}`;    
-    };
-
-    element.addEventListener('load', () => {
-      loadCounter += 1;      
-    });
-  };
+  let jwtToken = localStorage.getItem('userjwt');  
 
   const render = () => {
     appContainer.innerHTML = `
@@ -71,8 +54,8 @@
     const videoSrc = document.querySelector('.videoSrc');
     const memeText = document.querySelector('.memeText');
     const submitButton = document.querySelector('.submitButton');
-    const chatContainer = document.querySelector('.chatContainer');
-    const hiddenContainer = document.querySelector('.hiddenContainer');    
+    let chatContainer = document.querySelector('.chatContainer');
+    let hiddenContainer = document.querySelector('.hiddenContainer');    
     const canvas = document.querySelector('.canvas');
     const context = canvas.getContext('2d');
 
@@ -87,31 +70,39 @@
       submitButton.classList.remove('hidden');
     });
 
-    const getMemes = () => {
+    const getMemes = async () => {
       const fetchOptions = {
         'credentials': 'include',
         headers: {
           'Authorization': `Bearer ${jwtToken}`
         }      
-      }
-      fetch('/api/images', fetchOptions)
-        .then((res) => res.json())
-        .then((data) => {
-          Object.keys(data).forEach((key) => {
-            if (!userImages[key] && data[key].imageSrc) {              
-              userImages[key] = new Image(data[key].imageSrc, hiddenContainer);
-            }
-            if (userImages[key] && data[key].imageSrc) {
-              userImages[key].changeSource(data[key].imageSrc);
-            }
-          });                                                   
-        });
-        const totalImages = Object.keys(userImages).length;                    
-        if(loadCounter > totalImages && hiddenContainer.innerHTML) {
-          loadCounter = 0;
-            chatContainer.innerHTML = hiddenContainer.innerHTML;
-            hiddenContainer.innerHTML = "";                      
-        }     
+      };
+      const data = await fetch('/api/images', fetchOptions)
+        .then((res) => res.json());
+            
+      hiddenContainer.innerHTML = Object.entries(data).reduce((acc, [key, value]) => {
+        acc += `<img class="squareImage" src="${value.imageSrc}?${Date.now()}" />`
+        return acc;
+      }, '');
+      let loadCounter = 0;
+      const images = hiddenContainer.querySelectorAll( 'img' );
+      if (!images.length)
+        return setTimeout(getMemes, 1000);
+
+      images.forEach((img) => {
+        img.addEventListener('load', () => {
+          loadCounter += 1;
+          if (loadCounter !== images.length)
+            return;
+          
+          hiddenContainer.classList.toggle('hidden');
+          chatContainer.classList.toggle('hidden');
+
+          const temp = chatContainer;
+          chatContainer = hiddenContainer;
+          hiddenContainer = temp;
+        })
+      })
       setTimeout(getMemes, 1000);
     };
 
