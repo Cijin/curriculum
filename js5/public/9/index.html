@@ -27,6 +27,7 @@
     height: 300px;
     width: 300px;
     margin-right: 10px;
+    margin-bottom: 10px;
   }
 </style>
 
@@ -48,13 +49,8 @@
     };
 
     element.addEventListener('load', () => {
-      loadCounter += 1;
-      antiFlicker();
+      loadCounter += 1;      
     });
-
-    this.delete = () => {
-      element.remove();
-    }
   };
 
   const render = () => {
@@ -102,26 +98,20 @@
         .then((res) => res.json())
         .then((data) => {
           Object.keys(data).forEach((key) => {
-            if (!userImages[key]) {              
+            if (!userImages[key] && data[key].imageSrc) {              
               userImages[key] = new Image(data[key].imageSrc, hiddenContainer);
             }
-            else {
+            if (userImages[key] && data[key].imageSrc) {
               userImages[key].changeSource(data[key].imageSrc);
             }
-          });
-                    
-          const antiFlicker = () => {
-            if(loadCounter >= totalImages) {
-              const totalImages = Object.keys(userImages).length;
-              loadCounter = -1;
-              hiddenContainer.innerHTML = chatContainer.innerHTML;
-              chatContainer.innerHTML = tempContainer.innerHTML;
-              chatContainer.classList.toggle('hidden');
-              hiddenContainer.classList.toggle('hidden');                        
-            }
-          }
-          setTimeout(getMemes, 1000);
-        });      
+          });                                                   
+        });
+        const totalImages = Object.keys(userImages).length;                    
+        if(loadCounter >= totalImages) {            
+          loadCounter = 0;
+          chatContainer.innerHTML = hiddenContainer.innerHTML;                                  
+        }      
+      setTimeout(getMemes, 1000);
     };
 
     getMemes();
