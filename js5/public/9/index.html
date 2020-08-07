@@ -101,7 +101,7 @@
             if (!userImages[key] && data[key].imageSrc) {              
               userImages[key] = new Image(data[key].imageSrc, hiddenContainer);
             }
-            if (data[key].imageSrc) {
+            if (userImages[key] && data[key].imageSrc) {
               userImages[key].changeSource(data[key].imageSrc);
             }
           });                                                   
