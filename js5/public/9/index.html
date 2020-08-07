@@ -49,6 +49,7 @@
 
     element.addEventListener('load', () => {
       loadCounter += 1;
+      antiFlicker();
     });
 
     this.delete = () => {
@@ -62,8 +63,7 @@
       <hr>
       <h3>Memes!</h3>
       <div class="chatContainer"></div>
-      <div class="hiddenContainer hidden"></div>
-      <div class="temp hidden"></div>
+      <div class="hiddenContainer hidden"></div>      
       <hr>           
       <h3>Create New Meme</h2>
       <video class="videoSrc" width=640 height=480></video>
@@ -76,8 +76,7 @@
     const memeText = document.querySelector('.memeText');
     const submitButton = document.querySelector('.submitButton');
     const chatContainer = document.querySelector('.chatContainer');
-    const hiddenContainer = document.querySelector('.hiddenContainer');
-    const tempContainer = document.querySelector('.temp');
+    const hiddenContainer = document.querySelector('.hiddenContainer');    
     const canvas = document.querySelector('.canvas');
     const context = canvas.getContext('2d');
 
@@ -104,20 +103,22 @@
         .then((data) => {
           Object.keys(data).forEach((key) => {
             if (!userImages[key]) {              
-              userImages[key] = new Image(data[key].imageSrc, tempContainer);
+              userImages[key] = new Image(data[key].imageSrc, hiddenContainer);
             }
             else {
               userImages[key].changeSource(data[key].imageSrc);
             }
           });
-          
-          const totalImages = Object.keys(userImages).length;
-          if(loadCounter === totalImages) {
-            loadCounter = -1;
-            hiddenContainer.innerHTML = chatContainer.innerHTML;
-            chatContainer.innerHTML = tempContainer.innerHTML;
-            chatContainer.classList.toggle('hidden');
-            hiddenContainer.classList.toggle('hidden');                        
+                    
+          const antiFlicker = () => {
+            if(loadCounter >= totalImages) {
+              const totalImages = Object.keys(userImages).length;
+              loadCounter = -1;
+              hiddenContainer.innerHTML = chatContainer.innerHTML;
+              chatContainer.innerHTML = tempContainer.innerHTML;
+              chatContainer.classList.toggle('hidden');
+              hiddenContainer.classList.toggle('hidden');                        
+            }
           }
           setTimeout(getMemes, 1000);
         });      
