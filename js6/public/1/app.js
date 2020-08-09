@@ -1,3 +1,4 @@
+const path = require('path');
 const { ApolloServer, gql } = require('apollo-server-express');
 const express = require('express');
 const app = express();
@@ -46,6 +47,10 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app });
 
+app.get('/', (req, res) => {
+  return res.sendFile(path.resolve(__dirname, 'index.html'));
+})
+
 app.listen({ port: 4001 }, () => {
-  console.log(`🚀 Server ready at http://localhost:4001${server.graphqlPath}`);
+  console.log(`🚀 Server ready at http://localhost:4001}`);
 });
