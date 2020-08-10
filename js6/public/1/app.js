@@ -1,4 +1,3 @@
-const path = require('path');
 const { ApolloServer, gql } = require('apollo-server-express');
 const express = require('express');
 const app = express();
@@ -8,18 +7,33 @@ const typeDefs = gql`
   type Lesson {
     title: String
   }
-
-  type Query {
-    lessons: [Lesson]
-    getPokemon(id: Int!): Pokemon
-    search(str: String!): Pokemon
-  }
-
+  
   type Pokemon {
     name: String
     image: String
   }
+
+  type BasicPokemon {
+    name: String
+  }
+
+  type Query {
+    lessons: [Lesson]
+    search(str: String!): BasicPokemon
+    getPokemon(str: String!): Pokemon
+  }
 `;
+
+const resolvePokemon = async (parent, {str}) => {
+ return await fetch(`https://pokeapi.co/api/v2/pokemon/${str}`)
+                  .then((response) => response.json())
+                  .then((data) => { 
+                  return {
+                    name: data.name,
+                    image: data.sprites.front_default
+                  }
+                });  
+}
 
 const resolvers = {
   Query: {
@@ -28,15 +42,9 @@ const resolvers = {
       return response.json();
     },
 
-    getPokemon: async (parent, { id }) => {
-      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-      return response.json();
-    },
+    getPokemon: resolvePokemon,
 
-    search: async (parent, {str}) => {
-      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${str}`);
-      return response.json();
-    }
+    search: resolvePokemon,
   },
 };
 
@@ -47,10 +55,6 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app });
 
-app.get('/', (req, res) => {
-  return res.sendFile(path.resolve(__dirname, 'index.html'));
-})
-
 app.listen({ port: 4001 }, () => {
-  console.log(`🚀 Server ready at http://localhost:4001}`);
+  console.log(`🚀 Server ready at http://localhost:4001/graphql}`);
 });
