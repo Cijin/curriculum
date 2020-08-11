@@ -1,6 +1,8 @@
 const { gql } = require('apollo-server-express');
+const fetch = require('node-fetch');
+const loginInfo = {};
 
-export default typeDefs = gql`
+const typeDefs = gql`
   type Pokemon {
     name: String
     image: String
@@ -34,7 +36,7 @@ export default typeDefs = gql`
   }
 `;
 
-const resolvePokemon = async (parent, {str}) => {
+const resolvePokemon = async (parent, { str }) => {
   return await fetch(`https://pokeapi.co/api/v2/pokemon/${str}`)
     .then((response) => response.json())
     .then((data) => {
@@ -45,7 +47,7 @@ const resolvePokemon = async (parent, {str}) => {
     })
 };
 
-export default resolvers = {
+const resolvers = {
   Query: {
     lessons: async () => {
       const response = await fetch("https://c0d3.com/api/lessons");
@@ -55,5 +57,32 @@ export default resolvers = {
     search: resolvePokemon,
 
     getPokemon: resolvePokemon,
+
+    user: (parent, args, { req }) => {
+      if (loginInfo[req.session.name]) {
+        return loginInfo[name];
+      }
+      return;
+    },
+
+    login: (parent, { pokemon }, { req }) => {
+      const name = pokemon.name;
+      const image = pokemon.image;
+      const lessons = lessons();
+      req.session.name = name;
+      return loginInfo[name] = { name, image, lessons };
+    },
+  }, 
+
+  Mutation: {
+    enroll: (parent, { title }, { req }) => {
+
+    },
+
+    unenroll: (parent, { title }, { req }) => {
+
+    },
   }
 };
+
+module.exports = { typeDefs, resolvers }

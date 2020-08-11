@@ -7,10 +7,23 @@ const { typeDefs, resolvers } = require('./schema');
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  context: ({ req }) => ({ session: req.session }),
 });
 
 server.applyMiddleware({ app });
+
+app.use(session({
+  name: "oreo",
+  secret: "cookie&cream",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: true,
+    httpOnly: true,
+    maxAge: 10000,
+  }
+}));
 
 app.listen({ port: 4001 }, () => {
   console.log(`🚀 Server ready at http://localhost:4001/graphql}`);
