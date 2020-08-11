@@ -2,6 +2,8 @@ const { gql } = require('apollo-server-express');
 const fetch = require('node-fetch');
 const loginInfo = {};
 
+//TODO: caching!
+
 const typeDefs = gql`
   type Pokemon {
     name: String
@@ -76,7 +78,7 @@ const resolvers = {
 
   Mutation: {
     enroll: (parent, { title }, { req }) => {
-
+      //TODO: add enroll to loginfo??
     },
 
     unenroll: (parent, { title }, { req }) => {
