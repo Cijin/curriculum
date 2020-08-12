@@ -1,8 +1,7 @@
 const { gql } = require('apollo-server-express');
 const fetch = require('node-fetch');
 const userInfo = {};
-
-//TODO: caching!
+const { v4: uuidv4 } = require('uuid');
 
 const typeDefs = gql`
   type Pokemon {
@@ -61,41 +60,39 @@ const resolvers = {
     getPokemon: resolvePokemon,
 
     user: (parent, args, { req }) => {
-      if (userInfo[req.session.name]) {
-        return userInfo[name];
+      if (userInfo[req.session.id]) {
+        return userInfo[id];
       }
       return;
     },
 
-    login: (parent, { pokemon }, { req }) => {
-      const name = pokemon.name;
-      const image = pokemon.image;
-      const lessons = lessons();      
-      req.session.name = name;
-      return userInfo[name] = { name, image, lessons };
+    login: (parent, { name }, { req }) => {                  
+      req.session.id = uuidv4();
+      userInfo[req.session.id] = { name };
+      return name;
     },
   }, 
 
   Mutation: {
     enroll: (parent, { title }, { req, res }) => {
-      const name = req.session.name;
-      if (!name) {
+      const id = req.session.id;
+      if (!id) {
         return res.sendStatus(403);
       }
-      userInfo[name].lessons.forEach((lesson, idx) => {
+      userInfo[id].lessons.forEach((lesson, idx) => {
         if (lesson.title === title) {
-          return userInfo[name].lessons.splice(idx, 1);
+          return userInfo[id].lessons.splice(idx, 1);
         }
       });
       return userInfo[name]
     },
 
     unenroll: (parent, { title }, { req, res }) => {
-      const name = req.session.name;
-      if (!name) {
+      const id = req.session.id;
+      if (!id) {
         return res.sendStatus(403);
       }
-      return userInfo[name].push({ title });
+      return userInfo[id].push({ title });
     },
   }
 };
