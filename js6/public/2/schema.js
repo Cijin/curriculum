@@ -1,6 +1,6 @@
 const { gql } = require('apollo-server-express');
 const fetch = require('node-fetch');
-const loginInfo = {};
+const userInfo = {};
 
 //TODO: caching!
 
@@ -61,8 +61,8 @@ const resolvers = {
     getPokemon: resolvePokemon,
 
     user: (parent, args, { req }) => {
-      if (loginInfo[req.session.name]) {
-        return loginInfo[name];
+      if (userInfo[req.session.name]) {
+        return userInfo[name];
       }
       return;
     },
@@ -70,19 +70,32 @@ const resolvers = {
     login: (parent, { pokemon }, { req }) => {
       const name = pokemon.name;
       const image = pokemon.image;
-      const lessons = lessons();
+      const lessons = lessons();      
       req.session.name = name;
-      return loginInfo[name] = { name, image, lessons };
+      return userInfo[name] = { name, image, lessons };
     },
   }, 
 
   Mutation: {
-    enroll: (parent, { title }, { req }) => {
-      //TODO: add enroll to loginfo??
+    enroll: (parent, { title }, { req, res }) => {
+      const name = req.session.name;
+      if (!name) {
+        return res.sendStatus(403);
+      }
+      userInfo[name].lessons.forEach((lesson, idx) => {
+        if (lesson.title === title) {
+          return userInfo[name].lessons.splice(idx, 1);
+        }
+      });
+      return userInfo[name]
     },
 
-    unenroll: (parent, { title }, { req }) => {
-
+    unenroll: (parent, { title }, { req, res }) => {
+      const name = req.session.name;
+      if (!name) {
+        return res.sendStatus(403);
+      }
+      return userInfo[name].push({ title });
     },
   }
 };
