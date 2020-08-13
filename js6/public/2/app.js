@@ -49,7 +49,5 @@ app.get('/', (req, res) => {
 
 
 app.listen({ port: 4001 }, () => {
-  loadData().then(() => {
-    console.log(`🚀 Server ready on Port: 4001`);
-  })  
+  console.log(`🚀 Server ready on Port: 4001`);  
 });

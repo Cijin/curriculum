@@ -184,6 +184,7 @@ sendQuery(`{
   if (!result.user) {
     return renderLogin()
   }
+  console.log(result.lessons);
   renderLessons(result.user, result.lessons)
 })
   </script>
