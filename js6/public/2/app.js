@@ -4,22 +4,6 @@ const app = express();
 const session = require('express-session');
 const { ApolloServer } = require('apollo-server-express');
 const { typeDefs, resolvers } = require('./schema');
-const fetch = require('node-fetch');
-
-const loadData = async () => {
-  const fetchOptions = {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      query: `{
-        lessons {title}
-      }`
-    })
-  };
-  await fetch('http://localhost:4001/graphql', fetchOptions);
-};
 
 app.use(
   session({
