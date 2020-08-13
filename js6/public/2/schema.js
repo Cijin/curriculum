@@ -1,7 +1,8 @@
 const { gql } = require('apollo-server-express');
 const fetch = require('node-fetch');
 const userInfo = {};
-const { v4: uuidv4 } = require('uuid');
+const pokeCache = {};
+let savedLessons = [];
 
 const typeDefs = gql`
   type Pokemon {
@@ -37,10 +38,19 @@ const typeDefs = gql`
   }
 `;
 
-const resolvePokemon = async (parent, { str }) => {
+const resolvePokemon = async (_, { str }) => {  
+  if (pokeCache[str]) {    
+    return {
+      name: pokeCache[str].name,
+      image: pokeCache[str].image,
+    };
+  }
   return await fetch(`https://pokeapi.co/api/v2/pokemon/${str}`)
     .then((response) => response.json())
     .then((data) => {
+      pokeCache[str] = {};
+      pokeCache[str].name = data.name;
+      pokeCache[str].image = data.sprites.front_default;
       return {
         name: data.name,
         image: data.sprites.front_default
@@ -50,49 +60,77 @@ const resolvePokemon = async (parent, { str }) => {
 
 const resolvers = {
   Query: {
-    lessons: async () => {
-      const response = await fetch("https://c0d3.com/api/lessons");
-      return response.json();
+    lessons: async (_, args) => {      
+      if (!savedLessons.length) {
+        return await fetch("https://c0d3.com/api/lessons")
+          .then((response) => response.json())
+          .then((lessons) => {
+            savedLessons = lessons;
+            return lessons;
+          });
+      }
+      return savedLessons
     },
 
     search: resolvePokemon,
 
     getPokemon: resolvePokemon,
 
-    user: (parent, args, { req }) => {
-      if (userInfo[req.session.id]) {
-        return userInfo[id];
+    user: (_, args, { req }) => {
+      if (req.session.pokemonName) {
+        const pokemonName = req.session.pokemonName;        
+        return {          
+          name: pokeCache[pokemonName].name,
+          image: pokeCache[pokemonName].image,
+          lessons: savedLessons
+        };
       }
       return;
     },
 
-    login: (parent, { name }, { req }) => {                  
-      req.session.id = uuidv4();
-      userInfo[req.session.id] = { name };
-      return name;
+    login: (_, { pokemon }, { req }) => {                          
+      req.session.pokemonName = pokemon;     
+      userInfo[pokemon] = {};
+      userInfo[pokemon].lessons = []
+      return {        
+        name: pokeCache[pokemon].name,
+        image: pokeCache[pokemon].image,
+        lessons: savedLessons
+      };
     },
   }, 
 
   Mutation: {
-    enroll: (parent, { title }, { req, res }) => {
-      const id = req.session.id;
-      if (!id) {
-        return res.sendStatus(403);
+    enroll: (_, { title }, { req }) => {
+      const pokemonName = req.session.pokemonName;
+      if (!pokemonName) {
+        return;
       }
-      userInfo[id].lessons.forEach((lesson, idx) => {
+      userInfo[pokemonName].lessons.forEach((lesson, idx) => {
         if (lesson.title === title) {
-          return userInfo[id].lessons.splice(idx, 1);
+          userInfo[pokemonName].lessons.splice(idx, 1);
         }
       });
-      return userInfo[name]
+      return {
+        user: pokemonName,
+        name: pokeCache[pokemonName].name,
+        image: pokeCache[pokemonName].image,
+        lessons: userInfo[pokemonName].lessons
+      };
     },
 
-    unenroll: (parent, { title }, { req, res }) => {
-      const id = req.session.id;
-      if (!id) {
-        return res.sendStatus(403);
+    unenroll: (_, { title }, { req }) => {
+      const pokemonName = req.session.pokemonName;
+      if (!pokemonName) {
+        return;
       }
-      return userInfo[id].push({ title });
+      userInfo[pokemonName].lessons.push({ title });
+      return {
+        user: pokemonName,
+        name: pokeCache[pokemonName].name,
+        image: pokeCache[pokemonName].image,
+        lessons: userInfo[pokemonName].lessons
+      };
     },
   }
 };
