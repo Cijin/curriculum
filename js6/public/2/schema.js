@@ -82,7 +82,7 @@ const resolvers = {
         return {          
           name: pokeCache[pokemonName].name,
           image: pokeCache[pokemonName].image,
-          lessons: savedLessons
+          lessons: userInfo[pokemonName].lessons || []
         };
       }
       return;
