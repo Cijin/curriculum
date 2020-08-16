@@ -78,12 +78,7 @@ const resolvers = {
 
     user: (_, args, { req }) => {
       if (req.session.pokemonName) {
-        const pokemonName = req.session.pokemonName;        
-        return {          
-          name: pokeCache[pokemonName].name,
-          image: pokeCache[pokemonName].image,
-          lessons: userInfo[pokemonName].lessons || []
-        };
+        return userInfo[req.session.pokemonName];
       }
       return;
     },
@@ -91,12 +86,11 @@ const resolvers = {
     login: (_, { pokemon }, { req }) => {                          
       req.session.pokemonName = pokemon;     
       userInfo[pokemon] = {};
-      userInfo[pokemon].lessons = []
-      return {        
-        name: pokeCache[pokemon].name,
-        image: pokeCache[pokemon].image,
-        lessons: savedLessons
-      };
+      userInfo[pokemon].name = pokeCache[pokemon].name;
+      userInfo[pokemon].image = pokeCache[pokemon].image;
+      userInfo[pokemon].lessons = [];
+      
+      return userInfo[pokemon];
     },
   }, 
 
@@ -111,12 +105,7 @@ const resolvers = {
           userInfo[pokemonName].lessons.splice(idx, 1);
         }
       });
-      return {
-        user: pokemonName,
-        name: pokeCache[pokemonName].name,
-        image: pokeCache[pokemonName].image,
-        lessons: userInfo[pokemonName].lessons
-      };
+      return userInfo[pokemonName];
     },
 
     unenroll: (_, { title }, { req }) => {
@@ -125,12 +114,7 @@ const resolvers = {
         return;
       }
       userInfo[pokemonName].lessons.push({ title });
-      return {
-        user: pokemonName,
-        name: pokeCache[pokemonName].name,
-        image: pokeCache[pokemonName].image,
-        lessons: userInfo[pokemonName].lessons
-      };
+      return userInfo[pokemonName];
     },
   }
 };
