@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const cors = require('cors');
+
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'kanban.html'));

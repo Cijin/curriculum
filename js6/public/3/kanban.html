@@ -1,60 +1,59 @@
 <head>
-  <title>Kanban React</title>
+  <title>Kanban & Stars with React</title>
   <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <script src="https://kit.fontawesome.com/b60951bd83.js" crossorigin="anonymous"></script>
 </head>
 <body>
   <div id="root"></div>
   <script type="text/babel">       
-    function Kanban (props) {
-      const db = [
-        { header: "Sausage", color: "red", tasks: [], },
-        { header: "Mash", color: "blue", tasks: [], },
-        { header: "Ham", color: "green", tasks: [], },
-        { header: "Chili", color: "purple", tasks: [], },
-      ];
+    function Star() {
+      const [value, setValue] = React.useState(0);
+      const [isLocked, setIsLocked] = React.useState(false);
 
-      
+      const stars = [1, 2, 3, 4, 5].map((star, idx) => {
+        const mouseMove = () => {
+          if (isLocked) {
+            return;
+          }
+          setValue(star);
+        };
+
+        let classVal = 'far';
+        if(star <= value) {
+          classVal = 'fas';
+        }
+
+        const onClick = () => {
+          setIsLocked(true);
+          setValue(star);
+        };
+        
+        return (
+          <i 
+            className={`${classVal} fa-star`} 
+            key={idx}
+            onClick={onClick} 
+            onMouseMove={mouseMove}
+          />
+        );
+      });
+      const message = `You are giving ${value} stars`;
+      const divMouseEnter = () => {
+        setIsLocked(false);
+      }
 
       return (
-        <div style={{width: "100%"}}>
-          <Board header="Sausage" color="red" />
-          <Board header="Mash" color="blue"/>
-          <Board header="Ham" color="green"/>
-          <Board header="Chili" color="purple"/>
-        </div>
-      )
-    };
-
-    function Board (props) {
-      return (
-        <div style={{width: "25%"}}>
-          <div style={{backgroundColor:`${props.color}`}} className="todoHeader">
-            <h3>{props.header}</h3>
+          <div onMouseEnter={divMouseEnter}>
+            {stars}
+            <p>{message}</p>
           </div>
-          <div className="tasksContainer">
-            <Task task="Finish Kanban React"/>
-          </div>
-          <textarea className="newTasks" placeholder="Enter Task Here...">
-          </textarea>
-          <button className="submitButton">Submit</button>
-        </div>
-      )
-    };
-
-    function Task (props) {
-      return (
-        <div className="tasksContainer">
-          <button className="moveLeft">{'<'}</button>
-          <div className="task">{props.task}</div>
-          <button className="moveRight">{'>'}</button>
-        </div>
       )
     };
 
     ReactDOM.render(
-      <Kanban />,
+      <Star />,
       document.getElementById('root')
     );
   </script>
