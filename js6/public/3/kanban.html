@@ -39,8 +39,9 @@
 </head>
 <body>
   <div id="root"></div>
-  <script type="text/babel">       
-    
+  <script type="text/babel">
+      
+    //stars component begins here 
     function Star() {
       const [value, setValue] = React.useState(0);
       const [isLocked, setIsLocked] = React.useState(false);
@@ -88,6 +89,7 @@
       )
     };
 
+    //Kanban board starts from here on
     function Board(props) {
       const [tasks, setTasks] = React.useState(props.data.tasks);
       const [value, setValue] = React.useState('');
@@ -167,7 +169,7 @@
         </div>
       )
     };
-
+    //inital board data
     const starterData = [{header: "To-Do", color: "Red", tasks: []}, 
       {header: "Doing", color:"blue", tasks: []}, {header: "Done", color:"green", tasks: []},
       {header: "Approved", color:"purple", tasks: []}];
@@ -177,6 +179,7 @@
       if(props.data && props.data.length === 4) {
         intialData = props.data;
       }
+      //primarily used for moving elements around, ex: move left, right
       const [boardsData, setBoardsData] = React.useState(intialData);
 
       const boards = boardsData.map((boardData, idx) => {
@@ -212,6 +215,7 @@
       ); 
     };
 
+    //switch between kanban and stars
     const App = () => {
       const appPath = window.location.pathname.split('/').pop();
       if (appPath.toLowerCase() === 'stars') {
