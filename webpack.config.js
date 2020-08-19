@@ -1,16 +1,17 @@
 const path = require('path');
 
 module.exports  = {
-  entry: './components/app.js',
+  entry: './js6/public/3/components/app.js',
   mode: 'development',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'js6/public/3/dist'),
   },
   module: {
     rules: [
       {
         test: /\.js$/,
-        exclude: 'babel-loader',
+        exclude: '/node_modules',
+        loader: 'babel-loader',
         options: {
           'presets': ['@babel/preset-react']
         },

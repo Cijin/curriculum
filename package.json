@@ -3,7 +3,8 @@
   "description": "algorithm practice",
   "version": "0.0.0",
   "scripts": {
-    "test": "node ./node_modules/jest/bin/jest.js -o --watch"
+    "test": "node ./node_modules/jest/bin/jest.js -o --watch",
+    "build": "webpack"
   },
   "dependencies": {
     "@babel/preset-react": "^7.10.4",
