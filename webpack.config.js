@@ -1,10 +1,10 @@
 const path = require('path');
 
 module.exports  = {
-  entry: './js6/public/3/components/app.js',
+  entry: './js6/public/4/components/app.js',
   mode: 'development',
   output: {
-    path: path.resolve(__dirname, 'js6/public/3/dist'),
+    path: path.resolve(__dirname, 'js6/public/4/dist'),
   },
   module: {
     rules: [

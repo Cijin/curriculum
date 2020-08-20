@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "scripts": {
     "test": "node ./node_modules/jest/bin/jest.js -o --watch",
-    "build": "webpack"
+    "build": "webpack",
+    "start": "webpack --watch"
   },
   "dependencies": {
     "@babel/preset-react": "^7.10.4",
