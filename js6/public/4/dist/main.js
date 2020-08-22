@@ -81,32 +81,56 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./js6/public/3/components/app.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./js6/public/4/components/app.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./js6/public/3/components/app.js":
+/***/ "./js6/public/4/components/app.js":
 /*!****************************************!*\
-  !*** ./js6/public/3/components/app.js ***!
+  !*** ./js6/public/4/components/app.js ***!
   \****************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ \"./node_modules/react-dom/index.js\");\n/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _stars__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./stars */ \"./js6/public/3/components/stars.js\");\n\n\n\nreact_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_stars__WEBPACK_IMPORTED_MODULE_2__[\"default\"], null), document.getElementById('root'));\n\n//# sourceURL=webpack:///./js6/public/3/components/app.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ \"./node_modules/react-dom/index.js\");\n/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _login__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./login */ \"./js6/public/4/components/login.js\");\n\n\n\nreact_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_login__WEBPACK_IMPORTED_MODULE_2__[\"default\"], null), document.getElementById('root'));\n\n//# sourceURL=webpack:///./js6/public/4/components/app.js?");
 
 /***/ }),
 
-/***/ "./js6/public/3/components/stars.js":
+/***/ "./js6/public/4/components/login.js":
 /*!******************************************!*\
-  !*** ./js6/public/3/components/stars.js ***!
+  !*** ./js6/public/4/components/login.js ***!
   \******************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n\n\nfunction Stars() {\n  const [value, setValue] = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useState\"])(0);\n  const [isLocked, setIsLocked] = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useState\"])(false);\n  const stars = [1, 2, 3, 4, 5].map((star, idx) => {\n    const mouseMove = () => {\n      if (isLocked) {\n        return;\n      }\n\n      setValue(star);\n    };\n\n    let classVal = 'far';\n\n    if (star <= value) {\n      classVal = 'fas';\n    }\n\n    const onClick = () => {\n      setIsLocked(true);\n      setValue(star);\n    };\n\n    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"i\", {\n      className: `${classVal} fa-star`,\n      key: idx,\n      onClick: onClick,\n      onMouseMove: mouseMove\n    });\n  });\n  let message = `You are giving ${value} stars`;\n\n  if (isLocked) {\n    message = `You have given ${value} stars`;\n  }\n\n  const divMouseEnter = () => {\n    setIsLocked(false);\n  };\n\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", {\n    onMouseEnter: divMouseEnter\n  }, stars, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"p\", null, message));\n}\n\n;\n/* harmony default export */ __webpack_exports__[\"default\"] = (Stars);\n\n//# sourceURL=webpack:///./js6/public/3/components/stars.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _sendQuery__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sendQuery */ \"./js6/public/4/components/sendQuery.js\");\n/* harmony import */ var _suggestion__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./suggestion */ \"./js6/public/4/components/suggestion.js\");\n\n\n\n\nfunction Login(props) {\n  const [pokemonName, setPokemonName] = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useState\"])(\"\");\n  const [image, setImage] = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useState\"])(\"\");\n  const [isLoading, setIsLoading] = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useState\"])(true);\n  const [suggestions, setSuggestions] = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useState\"])([]);\n  const inputEl = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useRef\"])(null);\n\n  const loadPokemon = name => {\n    Object(_sendQuery__WEBPACK_IMPORTED_MODULE_1__[\"default\"])(`{getPokemon(str:\"${name}\"){name, image}}`).then(result => {\n      setPokemonName(result.getPokemon.name);\n      setImage(result.getPokemon.image);\n      setIsLoading(false);\n    });\n  };\n\n  const handleKeyDown = e => {\n    if (e.keyCode === 13 && e.target.value) {\n      loadPokemon(e.target.value);\n    }\n\n    return;\n  };\n\n  const debounce = (fn, time) => {\n    let timeout;\n    return () => {\n      clearTimeout(timeout);\n      timeout = setTimeout(fn, time);\n    };\n  };\n\n  const handleChange = debounce(() => {\n    const str = inputEl.current.value;\n    Object(_sendQuery__WEBPACK_IMPORTED_MODULE_1__[\"default\"])(`{search(str: \"${str}\"){name}}`).then(data => {\n      const results = data.search || [];\n      const names = results.reduce((acc, pokemon) => {\n        return acc.concat(pokemon.name);\n      }, []);\n      setSuggestions(names);\n    });\n  }, 500);\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"h1\", null, \"Pokemon Search\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"input\", {\n    className: \"searchBox\",\n    type: \"text\",\n    ref: inputEl,\n    onChange: handleChange,\n    onKeyDown: handleKeyDown\n  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", {\n    className: \"suggestions\"\n  }, suggestions.map((pokemon, idx) => {\n    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_suggestion__WEBPACK_IMPORTED_MODULE_2__[\"default\"], {\n      name: pokemon,\n      replaceStr: inputEl.current.value,\n      handleClick: loadPokemon,\n      key: idx\n    });\n  })), isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", null) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"h1\", null, pokemonName), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"img\", {\n    src: image\n  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"button\", {\n    className: \"loginButton\"\n  }, \"Login\")));\n}\n\n;\n/* harmony default export */ __webpack_exports__[\"default\"] = (Login);\n\n//# sourceURL=webpack:///./js6/public/4/components/login.js?");
+
+/***/ }),
+
+/***/ "./js6/public/4/components/sendQuery.js":
+/*!**********************************************!*\
+  !*** ./js6/public/4/components/sendQuery.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\nconst sendQuery = query => {\n  return fetch(\"https://js5.c0d3.com/js6c2/graphql\", {\n    method: \"POST\",\n    headers: {\n      \"content-type\": \"application/json\"\n    },\n    body: JSON.stringify({\n      operationName: null,\n      variables: {},\n      query\n    })\n  }).then(r => r.json()).then(r => r.data);\n};\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (sendQuery);\n\n//# sourceURL=webpack:///./js6/public/4/components/sendQuery.js?");
+
+/***/ }),
+
+/***/ "./js6/public/4/components/suggestion.js":
+/*!***********************************************!*\
+  !*** ./js6/public/4/components/suggestion.js ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n\n\nfunction Suggestion(props) {\n  const str = props.name.replace(props.replace, `<span class='match'>${props.replace}</span>`);\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"h3\", {\n    onClick: props.handleClick\n  }, props.name.replace(props.replaceStr, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"span\", {\n    className: \"match\"\n  }, props.replace))));\n}\n\n;\n/* harmony default export */ __webpack_exports__[\"default\"] = (Suggestion);\n\n//# sourceURL=webpack:///./js6/public/4/components/suggestion.js?");
 
 /***/ }),
 
