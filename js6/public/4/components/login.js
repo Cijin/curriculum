@@ -15,6 +15,8 @@ function Login(props) {
         setPokemonName(result.getPokemon.name);
         setImage(result.getPokemon.image);
         setIsLoading(false);
+        setSuggestions([]);
+        inputEl.current.value = '';
       });
   };
 
@@ -23,6 +25,12 @@ function Login(props) {
       loadPokemon(e.target.value);    
     }
     return;    
+  };
+
+  const login = () => {
+    sendQuery(`
+      {login (pokemon: "${pokemonName}"){name}}
+    `).then((result) => window.location.reload);
   };
 
   const debounce = (fn, time) => {
@@ -69,7 +77,10 @@ function Login(props) {
         <div>
           <h1>{pokemonName}</h1>
           <img src={image}></img>
-          <button className="loginButton">Login</button>
+          <button 
+            onClick={login}
+            className="loginButton">Login
+          </button>
         </div>
       }
     </div>

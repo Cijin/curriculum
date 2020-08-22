@@ -106,7 +106,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var reac
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _sendQuery__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sendQuery */ \"./js6/public/4/components/sendQuery.js\");\n/* harmony import */ var _suggestion__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./suggestion */ \"./js6/public/4/components/suggestion.js\");\n\n\n\n\nfunction Login(props) {\n  const [pokemonName, setPokemonName] = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useState\"])(\"\");\n  const [image, setImage] = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useState\"])(\"\");\n  const [isLoading, setIsLoading] = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useState\"])(true);\n  const [suggestions, setSuggestions] = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useState\"])([]);\n  const inputEl = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useRef\"])(null);\n\n  const loadPokemon = name => {\n    Object(_sendQuery__WEBPACK_IMPORTED_MODULE_1__[\"default\"])(`{getPokemon(str:\"${name}\"){name, image}}`).then(result => {\n      setPokemonName(result.getPokemon.name);\n      setImage(result.getPokemon.image);\n      setIsLoading(false);\n    });\n  };\n\n  const handleKeyDown = e => {\n    if (e.keyCode === 13 && e.target.value) {\n      loadPokemon(e.target.value);\n    }\n\n    return;\n  };\n\n  const debounce = (fn, time) => {\n    let timeout;\n    return () => {\n      clearTimeout(timeout);\n      timeout = setTimeout(fn, time);\n    };\n  };\n\n  const handleChange = debounce(() => {\n    const str = inputEl.current.value;\n    Object(_sendQuery__WEBPACK_IMPORTED_MODULE_1__[\"default\"])(`{search(str: \"${str}\"){name}}`).then(data => {\n      const results = data.search || [];\n      const names = results.reduce((acc, pokemon) => {\n        return acc.concat(pokemon.name);\n      }, []);\n      setSuggestions(names);\n    });\n  }, 500);\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"h1\", null, \"Pokemon Search\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"input\", {\n    className: \"searchBox\",\n    type: \"text\",\n    ref: inputEl,\n    onChange: handleChange,\n    onKeyDown: handleKeyDown\n  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", {\n    className: \"suggestions\"\n  }, suggestions.map((pokemon, idx) => {\n    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_suggestion__WEBPACK_IMPORTED_MODULE_2__[\"default\"], {\n      name: pokemon,\n      replaceStr: inputEl.current.value,\n      handleClick: loadPokemon,\n      key: idx\n    });\n  })), isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", null) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"h1\", null, pokemonName), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"img\", {\n    src: image\n  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"button\", {\n    className: \"loginButton\"\n  }, \"Login\")));\n}\n\n;\n/* harmony default export */ __webpack_exports__[\"default\"] = (Login);\n\n//# sourceURL=webpack:///./js6/public/4/components/login.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _sendQuery__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sendQuery */ \"./js6/public/4/components/sendQuery.js\");\n/* harmony import */ var _suggestion__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./suggestion */ \"./js6/public/4/components/suggestion.js\");\n\n\n\n\nfunction Login(props) {\n  const [pokemonName, setPokemonName] = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useState\"])(\"\");\n  const [image, setImage] = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useState\"])(\"\");\n  const [isLoading, setIsLoading] = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useState\"])(true);\n  const [suggestions, setSuggestions] = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useState\"])([]);\n  const inputEl = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useRef\"])(null);\n\n  const loadPokemon = name => {\n    Object(_sendQuery__WEBPACK_IMPORTED_MODULE_1__[\"default\"])(`{getPokemon(str:\"${name}\"){name, image}}`).then(result => {\n      setPokemonName(result.getPokemon.name);\n      setImage(result.getPokemon.image);\n      setIsLoading(false);\n      setSuggestions([]);\n      inputEl.current.value = '';\n    });\n  };\n\n  const handleKeyDown = e => {\n    if (e.keyCode === 13 && e.target.value) {\n      loadPokemon(e.target.value);\n    }\n\n    return;\n  };\n\n  const login = () => {\n    Object(_sendQuery__WEBPACK_IMPORTED_MODULE_1__[\"default\"])(`\n      {login (pokemon: \"${pokemonName}\"){name}}\n    `).then(result => window.location.reload);\n  };\n\n  const debounce = (fn, time) => {\n    let timeout;\n    return () => {\n      clearTimeout(timeout);\n      timeout = setTimeout(fn, time);\n    };\n  };\n\n  const handleChange = debounce(() => {\n    const str = inputEl.current.value;\n    Object(_sendQuery__WEBPACK_IMPORTED_MODULE_1__[\"default\"])(`{search(str: \"${str}\"){name}}`).then(data => {\n      const results = data.search || [];\n      const names = results.reduce((acc, pokemon) => {\n        return acc.concat(pokemon.name);\n      }, []);\n      setSuggestions(names);\n    });\n  }, 500);\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"h1\", null, \"Pokemon Search\"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"input\", {\n    className: \"searchBox\",\n    type: \"text\",\n    ref: inputEl,\n    onChange: handleChange,\n    onKeyDown: handleKeyDown\n  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", {\n    className: \"suggestions\"\n  }, suggestions.map((pokemon, idx) => {\n    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_suggestion__WEBPACK_IMPORTED_MODULE_2__[\"default\"], {\n      name: pokemon,\n      replaceStr: inputEl.current.value,\n      handleClick: loadPokemon,\n      key: idx\n    });\n  })), isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", null) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"h1\", null, pokemonName), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"img\", {\n    src: image\n  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"button\", {\n    onClick: login,\n    className: \"loginButton\"\n  }, \"Login\")));\n}\n\n;\n/* harmony default export */ __webpack_exports__[\"default\"] = (Login);\n\n//# sourceURL=webpack:///./js6/public/4/components/login.js?");
 
 /***/ }),
 
@@ -130,7 +130,271 @@ eval("__webpack_require__.r(__webpack_exports__);\nconst sendQuery = query => {\
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n\n\nfunction Suggestion(props) {\n  const str = props.name.replace(props.replace, `<span class='match'>${props.replace}</span>`);\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"h3\", {\n    onClick: props.handleClick\n  }, props.name.replace(props.replaceStr, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"span\", {\n    className: \"match\"\n  }, props.replace))));\n}\n\n;\n/* harmony default export */ __webpack_exports__[\"default\"] = (Suggestion);\n\n//# sourceURL=webpack:///./js6/public/4/components/suggestion.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react_string_replace__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-string-replace */ \"./node_modules/react-string-replace/index.js\");\n/* harmony import */ var react_string_replace__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_string_replace__WEBPACK_IMPORTED_MODULE_1__);\n\n\n\nfunction Suggestion(props) {\n  const handleClick = () => {\n    props.handleClick(props.name);\n  };\n\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"div\", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"h3\", {\n    onClick: handleClick\n  }, react_string_replace__WEBPACK_IMPORTED_MODULE_1___default()(props.name, props.replaceStr, (match, i) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"span\", {\n    className: \"match\",\n    key: i\n  }, match))));\n}\n\n;\n/* harmony default export */ __webpack_exports__[\"default\"] = (Suggestion);\n\n//# sourceURL=webpack:///./js6/public/4/components/suggestion.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_Symbol.js":
+/*!****************************************!*\
+  !*** ./node_modules/lodash/_Symbol.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var root = __webpack_require__(/*! ./_root */ \"./node_modules/lodash/_root.js\");\n/** Built-in value references. */\n\n\nvar Symbol = root.Symbol;\nmodule.exports = Symbol;\n\n//# sourceURL=webpack:///./node_modules/lodash/_Symbol.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_arrayMap.js":
+/*!******************************************!*\
+  !*** ./node_modules/lodash/_arrayMap.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * A specialized version of `_.map` for arrays without support for iteratee\n * shorthands.\n *\n * @private\n * @param {Array} [array] The array to iterate over.\n * @param {Function} iteratee The function invoked per iteration.\n * @returns {Array} Returns the new mapped array.\n */\nfunction arrayMap(array, iteratee) {\n  var index = -1,\n      length = array == null ? 0 : array.length,\n      result = Array(length);\n\n  while (++index < length) {\n    result[index] = iteratee(array[index], index, array);\n  }\n\n  return result;\n}\n\nmodule.exports = arrayMap;\n\n//# sourceURL=webpack:///./node_modules/lodash/_arrayMap.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_arrayPush.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_arrayPush.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * Appends the elements of `values` to `array`.\n *\n * @private\n * @param {Array} array The array to modify.\n * @param {Array} values The values to append.\n * @returns {Array} Returns `array`.\n */\nfunction arrayPush(array, values) {\n  var index = -1,\n      length = values.length,\n      offset = array.length;\n\n  while (++index < length) {\n    array[offset + index] = values[index];\n  }\n\n  return array;\n}\n\nmodule.exports = arrayPush;\n\n//# sourceURL=webpack:///./node_modules/lodash/_arrayPush.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseFlatten.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_baseFlatten.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var arrayPush = __webpack_require__(/*! ./_arrayPush */ \"./node_modules/lodash/_arrayPush.js\"),\n    isFlattenable = __webpack_require__(/*! ./_isFlattenable */ \"./node_modules/lodash/_isFlattenable.js\");\n/**\n * The base implementation of `_.flatten` with support for restricting flattening.\n *\n * @private\n * @param {Array} array The array to flatten.\n * @param {number} depth The maximum recursion depth.\n * @param {boolean} [predicate=isFlattenable] The function invoked per iteration.\n * @param {boolean} [isStrict] Restrict to values that pass `predicate` checks.\n * @param {Array} [result=[]] The initial result value.\n * @returns {Array} Returns the new flattened array.\n */\n\n\nfunction baseFlatten(array, depth, predicate, isStrict, result) {\n  var index = -1,\n      length = array.length;\n  predicate || (predicate = isFlattenable);\n  result || (result = []);\n\n  while (++index < length) {\n    var value = array[index];\n\n    if (depth > 0 && predicate(value)) {\n      if (depth > 1) {\n        // Recursively flatten arrays (susceptible to call stack limits).\n        baseFlatten(value, depth - 1, predicate, isStrict, result);\n      } else {\n        arrayPush(result, value);\n      }\n    } else if (!isStrict) {\n      result[result.length] = value;\n    }\n  }\n\n  return result;\n}\n\nmodule.exports = baseFlatten;\n\n//# sourceURL=webpack:///./node_modules/lodash/_baseFlatten.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseGetTag.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_baseGetTag.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var Symbol = __webpack_require__(/*! ./_Symbol */ \"./node_modules/lodash/_Symbol.js\"),\n    getRawTag = __webpack_require__(/*! ./_getRawTag */ \"./node_modules/lodash/_getRawTag.js\"),\n    objectToString = __webpack_require__(/*! ./_objectToString */ \"./node_modules/lodash/_objectToString.js\");\n/** `Object#toString` result references. */\n\n\nvar nullTag = '[object Null]',\n    undefinedTag = '[object Undefined]';\n/** Built-in value references. */\n\nvar symToStringTag = Symbol ? Symbol.toStringTag : undefined;\n/**\n * The base implementation of `getTag` without fallbacks for buggy environments.\n *\n * @private\n * @param {*} value The value to query.\n * @returns {string} Returns the `toStringTag`.\n */\n\nfunction baseGetTag(value) {\n  if (value == null) {\n    return value === undefined ? undefinedTag : nullTag;\n  }\n\n  return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);\n}\n\nmodule.exports = baseGetTag;\n\n//# sourceURL=webpack:///./node_modules/lodash/_baseGetTag.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseIsArguments.js":
+/*!*************************************************!*\
+  !*** ./node_modules/lodash/_baseIsArguments.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ \"./node_modules/lodash/_baseGetTag.js\"),\n    isObjectLike = __webpack_require__(/*! ./isObjectLike */ \"./node_modules/lodash/isObjectLike.js\");\n/** `Object#toString` result references. */\n\n\nvar argsTag = '[object Arguments]';\n/**\n * The base implementation of `_.isArguments`.\n *\n * @private\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is an `arguments` object,\n */\n\nfunction baseIsArguments(value) {\n  return isObjectLike(value) && baseGetTag(value) == argsTag;\n}\n\nmodule.exports = baseIsArguments;\n\n//# sourceURL=webpack:///./node_modules/lodash/_baseIsArguments.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseIsRegExp.js":
+/*!**********************************************!*\
+  !*** ./node_modules/lodash/_baseIsRegExp.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ \"./node_modules/lodash/_baseGetTag.js\"),\n    isObjectLike = __webpack_require__(/*! ./isObjectLike */ \"./node_modules/lodash/isObjectLike.js\");\n/** `Object#toString` result references. */\n\n\nvar regexpTag = '[object RegExp]';\n/**\n * The base implementation of `_.isRegExp` without Node.js optimizations.\n *\n * @private\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is a regexp, else `false`.\n */\n\nfunction baseIsRegExp(value) {\n  return isObjectLike(value) && baseGetTag(value) == regexpTag;\n}\n\nmodule.exports = baseIsRegExp;\n\n//# sourceURL=webpack:///./node_modules/lodash/_baseIsRegExp.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseToString.js":
+/*!**********************************************!*\
+  !*** ./node_modules/lodash/_baseToString.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var Symbol = __webpack_require__(/*! ./_Symbol */ \"./node_modules/lodash/_Symbol.js\"),\n    arrayMap = __webpack_require__(/*! ./_arrayMap */ \"./node_modules/lodash/_arrayMap.js\"),\n    isArray = __webpack_require__(/*! ./isArray */ \"./node_modules/lodash/isArray.js\"),\n    isSymbol = __webpack_require__(/*! ./isSymbol */ \"./node_modules/lodash/isSymbol.js\");\n/** Used as references for various `Number` constants. */\n\n\nvar INFINITY = 1 / 0;\n/** Used to convert symbols to primitives and strings. */\n\nvar symbolProto = Symbol ? Symbol.prototype : undefined,\n    symbolToString = symbolProto ? symbolProto.toString : undefined;\n/**\n * The base implementation of `_.toString` which doesn't convert nullish\n * values to empty strings.\n *\n * @private\n * @param {*} value The value to process.\n * @returns {string} Returns the string.\n */\n\nfunction baseToString(value) {\n  // Exit early for strings to avoid a performance hit in some environments.\n  if (typeof value == 'string') {\n    return value;\n  }\n\n  if (isArray(value)) {\n    // Recursively convert values (susceptible to call stack limits).\n    return arrayMap(value, baseToString) + '';\n  }\n\n  if (isSymbol(value)) {\n    return symbolToString ? symbolToString.call(value) : '';\n  }\n\n  var result = value + '';\n  return result == '0' && 1 / value == -INFINITY ? '-0' : result;\n}\n\nmodule.exports = baseToString;\n\n//# sourceURL=webpack:///./node_modules/lodash/_baseToString.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseUnary.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_baseUnary.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * The base implementation of `_.unary` without support for storing metadata.\n *\n * @private\n * @param {Function} func The function to cap arguments for.\n * @returns {Function} Returns the new capped function.\n */\nfunction baseUnary(func) {\n  return function (value) {\n    return func(value);\n  };\n}\n\nmodule.exports = baseUnary;\n\n//# sourceURL=webpack:///./node_modules/lodash/_baseUnary.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_freeGlobal.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_freeGlobal.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("/* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */\nvar freeGlobal = typeof global == 'object' && global && global.Object === Object && global;\nmodule.exports = freeGlobal;\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ \"./node_modules/webpack/buildin/global.js\")))\n\n//# sourceURL=webpack:///./node_modules/lodash/_freeGlobal.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_getRawTag.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_getRawTag.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var Symbol = __webpack_require__(/*! ./_Symbol */ \"./node_modules/lodash/_Symbol.js\");\n/** Used for built-in method references. */\n\n\nvar objectProto = Object.prototype;\n/** Used to check objects for own properties. */\n\nvar hasOwnProperty = objectProto.hasOwnProperty;\n/**\n * Used to resolve the\n * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)\n * of values.\n */\n\nvar nativeObjectToString = objectProto.toString;\n/** Built-in value references. */\n\nvar symToStringTag = Symbol ? Symbol.toStringTag : undefined;\n/**\n * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.\n *\n * @private\n * @param {*} value The value to query.\n * @returns {string} Returns the raw `toStringTag`.\n */\n\nfunction getRawTag(value) {\n  var isOwn = hasOwnProperty.call(value, symToStringTag),\n      tag = value[symToStringTag];\n\n  try {\n    value[symToStringTag] = undefined;\n    var unmasked = true;\n  } catch (e) {}\n\n  var result = nativeObjectToString.call(value);\n\n  if (unmasked) {\n    if (isOwn) {\n      value[symToStringTag] = tag;\n    } else {\n      delete value[symToStringTag];\n    }\n  }\n\n  return result;\n}\n\nmodule.exports = getRawTag;\n\n//# sourceURL=webpack:///./node_modules/lodash/_getRawTag.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_isFlattenable.js":
+/*!***********************************************!*\
+  !*** ./node_modules/lodash/_isFlattenable.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var Symbol = __webpack_require__(/*! ./_Symbol */ \"./node_modules/lodash/_Symbol.js\"),\n    isArguments = __webpack_require__(/*! ./isArguments */ \"./node_modules/lodash/isArguments.js\"),\n    isArray = __webpack_require__(/*! ./isArray */ \"./node_modules/lodash/isArray.js\");\n/** Built-in value references. */\n\n\nvar spreadableSymbol = Symbol ? Symbol.isConcatSpreadable : undefined;\n/**\n * Checks if `value` is a flattenable `arguments` object or array.\n *\n * @private\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is flattenable, else `false`.\n */\n\nfunction isFlattenable(value) {\n  return isArray(value) || isArguments(value) || !!(spreadableSymbol && value && value[spreadableSymbol]);\n}\n\nmodule.exports = isFlattenable;\n\n//# sourceURL=webpack:///./node_modules/lodash/_isFlattenable.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_nodeUtil.js":
+/*!******************************************!*\
+  !*** ./node_modules/lodash/_nodeUtil.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(/*! ./_freeGlobal */ \"./node_modules/lodash/_freeGlobal.js\");\n/** Detect free variable `exports`. */\n\n\nvar freeExports =  true && exports && !exports.nodeType && exports;\n/** Detect free variable `module`. */\n\nvar freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;\n/** Detect the popular CommonJS extension `module.exports`. */\n\nvar moduleExports = freeModule && freeModule.exports === freeExports;\n/** Detect free variable `process` from Node.js. */\n\nvar freeProcess = moduleExports && freeGlobal.process;\n/** Used to access faster Node.js helpers. */\n\nvar nodeUtil = function () {\n  try {\n    // Use `util.types` for Node.js 10+.\n    var types = freeModule && freeModule.require && freeModule.require('util').types;\n\n    if (types) {\n      return types;\n    } // Legacy `process.binding('util')` for Node.js < 10.\n\n\n    return freeProcess && freeProcess.binding && freeProcess.binding('util');\n  } catch (e) {}\n}();\n\nmodule.exports = nodeUtil;\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/module.js */ \"./node_modules/webpack/buildin/module.js\")(module)))\n\n//# sourceURL=webpack:///./node_modules/lodash/_nodeUtil.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_objectToString.js":
+/*!************************************************!*\
+  !*** ./node_modules/lodash/_objectToString.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/** Used for built-in method references. */\nvar objectProto = Object.prototype;\n/**\n * Used to resolve the\n * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)\n * of values.\n */\n\nvar nativeObjectToString = objectProto.toString;\n/**\n * Converts `value` to a string using `Object.prototype.toString`.\n *\n * @private\n * @param {*} value The value to convert.\n * @returns {string} Returns the converted string.\n */\n\nfunction objectToString(value) {\n  return nativeObjectToString.call(value);\n}\n\nmodule.exports = objectToString;\n\n//# sourceURL=webpack:///./node_modules/lodash/_objectToString.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_root.js":
+/*!**************************************!*\
+  !*** ./node_modules/lodash/_root.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var freeGlobal = __webpack_require__(/*! ./_freeGlobal */ \"./node_modules/lodash/_freeGlobal.js\");\n/** Detect free variable `self`. */\n\n\nvar freeSelf = typeof self == 'object' && self && self.Object === Object && self;\n/** Used as a reference to the global object. */\n\nvar root = freeGlobal || freeSelf || Function('return this')();\nmodule.exports = root;\n\n//# sourceURL=webpack:///./node_modules/lodash/_root.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/escapeRegExp.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/escapeRegExp.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var toString = __webpack_require__(/*! ./toString */ \"./node_modules/lodash/toString.js\");\n/**\n * Used to match `RegExp`\n * [syntax characters](http://ecma-international.org/ecma-262/7.0/#sec-patterns).\n */\n\n\nvar reRegExpChar = /[\\\\^$.*+?()[\\]{}|]/g,\n    reHasRegExpChar = RegExp(reRegExpChar.source);\n/**\n * Escapes the `RegExp` special characters \"^\", \"$\", \"\\\", \".\", \"*\", \"+\",\n * \"?\", \"(\", \")\", \"[\", \"]\", \"{\", \"}\", and \"|\" in `string`.\n *\n * @static\n * @memberOf _\n * @since 3.0.0\n * @category String\n * @param {string} [string=''] The string to escape.\n * @returns {string} Returns the escaped string.\n * @example\n *\n * _.escapeRegExp('[lodash](https://lodash.com/)');\n * // => '\\[lodash\\]\\(https://lodash\\.com/\\)'\n */\n\nfunction escapeRegExp(string) {\n  string = toString(string);\n  return string && reHasRegExpChar.test(string) ? string.replace(reRegExpChar, '\\\\$&') : string;\n}\n\nmodule.exports = escapeRegExp;\n\n//# sourceURL=webpack:///./node_modules/lodash/escapeRegExp.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/flatten.js":
+/*!****************************************!*\
+  !*** ./node_modules/lodash/flatten.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseFlatten = __webpack_require__(/*! ./_baseFlatten */ \"./node_modules/lodash/_baseFlatten.js\");\n/**\n * Flattens `array` a single level deep.\n *\n * @static\n * @memberOf _\n * @since 0.1.0\n * @category Array\n * @param {Array} array The array to flatten.\n * @returns {Array} Returns the new flattened array.\n * @example\n *\n * _.flatten([1, [2, [3, [4]], 5]]);\n * // => [1, 2, [3, [4]], 5]\n */\n\n\nfunction flatten(array) {\n  var length = array == null ? 0 : array.length;\n  return length ? baseFlatten(array, 1) : [];\n}\n\nmodule.exports = flatten;\n\n//# sourceURL=webpack:///./node_modules/lodash/flatten.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isArguments.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/isArguments.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseIsArguments = __webpack_require__(/*! ./_baseIsArguments */ \"./node_modules/lodash/_baseIsArguments.js\"),\n    isObjectLike = __webpack_require__(/*! ./isObjectLike */ \"./node_modules/lodash/isObjectLike.js\");\n/** Used for built-in method references. */\n\n\nvar objectProto = Object.prototype;\n/** Used to check objects for own properties. */\n\nvar hasOwnProperty = objectProto.hasOwnProperty;\n/** Built-in value references. */\n\nvar propertyIsEnumerable = objectProto.propertyIsEnumerable;\n/**\n * Checks if `value` is likely an `arguments` object.\n *\n * @static\n * @memberOf _\n * @since 0.1.0\n * @category Lang\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is an `arguments` object,\n *  else `false`.\n * @example\n *\n * _.isArguments(function() { return arguments; }());\n * // => true\n *\n * _.isArguments([1, 2, 3]);\n * // => false\n */\n\nvar isArguments = baseIsArguments(function () {\n  return arguments;\n}()) ? baseIsArguments : function (value) {\n  return isObjectLike(value) && hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');\n};\nmodule.exports = isArguments;\n\n//# sourceURL=webpack:///./node_modules/lodash/isArguments.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isArray.js":
+/*!****************************************!*\
+  !*** ./node_modules/lodash/isArray.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * Checks if `value` is classified as an `Array` object.\n *\n * @static\n * @memberOf _\n * @since 0.1.0\n * @category Lang\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is an array, else `false`.\n * @example\n *\n * _.isArray([1, 2, 3]);\n * // => true\n *\n * _.isArray(document.body.children);\n * // => false\n *\n * _.isArray('abc');\n * // => false\n *\n * _.isArray(_.noop);\n * // => false\n */\nvar isArray = Array.isArray;\nmodule.exports = isArray;\n\n//# sourceURL=webpack:///./node_modules/lodash/isArray.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isObjectLike.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/isObjectLike.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * Checks if `value` is object-like. A value is object-like if it's not `null`\n * and has a `typeof` result of \"object\".\n *\n * @static\n * @memberOf _\n * @since 4.0.0\n * @category Lang\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is object-like, else `false`.\n * @example\n *\n * _.isObjectLike({});\n * // => true\n *\n * _.isObjectLike([1, 2, 3]);\n * // => true\n *\n * _.isObjectLike(_.noop);\n * // => false\n *\n * _.isObjectLike(null);\n * // => false\n */\nfunction isObjectLike(value) {\n  return value != null && typeof value == 'object';\n}\n\nmodule.exports = isObjectLike;\n\n//# sourceURL=webpack:///./node_modules/lodash/isObjectLike.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isRegExp.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/isRegExp.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseIsRegExp = __webpack_require__(/*! ./_baseIsRegExp */ \"./node_modules/lodash/_baseIsRegExp.js\"),\n    baseUnary = __webpack_require__(/*! ./_baseUnary */ \"./node_modules/lodash/_baseUnary.js\"),\n    nodeUtil = __webpack_require__(/*! ./_nodeUtil */ \"./node_modules/lodash/_nodeUtil.js\");\n/* Node.js helper references. */\n\n\nvar nodeIsRegExp = nodeUtil && nodeUtil.isRegExp;\n/**\n * Checks if `value` is classified as a `RegExp` object.\n *\n * @static\n * @memberOf _\n * @since 0.1.0\n * @category Lang\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is a regexp, else `false`.\n * @example\n *\n * _.isRegExp(/abc/);\n * // => true\n *\n * _.isRegExp('/abc/');\n * // => false\n */\n\nvar isRegExp = nodeIsRegExp ? baseUnary(nodeIsRegExp) : baseIsRegExp;\nmodule.exports = isRegExp;\n\n//# sourceURL=webpack:///./node_modules/lodash/isRegExp.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isString.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/isString.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ \"./node_modules/lodash/_baseGetTag.js\"),\n    isArray = __webpack_require__(/*! ./isArray */ \"./node_modules/lodash/isArray.js\"),\n    isObjectLike = __webpack_require__(/*! ./isObjectLike */ \"./node_modules/lodash/isObjectLike.js\");\n/** `Object#toString` result references. */\n\n\nvar stringTag = '[object String]';\n/**\n * Checks if `value` is classified as a `String` primitive or object.\n *\n * @static\n * @since 0.1.0\n * @memberOf _\n * @category Lang\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is a string, else `false`.\n * @example\n *\n * _.isString('abc');\n * // => true\n *\n * _.isString(1);\n * // => false\n */\n\nfunction isString(value) {\n  return typeof value == 'string' || !isArray(value) && isObjectLike(value) && baseGetTag(value) == stringTag;\n}\n\nmodule.exports = isString;\n\n//# sourceURL=webpack:///./node_modules/lodash/isString.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isSymbol.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/isSymbol.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ \"./node_modules/lodash/_baseGetTag.js\"),\n    isObjectLike = __webpack_require__(/*! ./isObjectLike */ \"./node_modules/lodash/isObjectLike.js\");\n/** `Object#toString` result references. */\n\n\nvar symbolTag = '[object Symbol]';\n/**\n * Checks if `value` is classified as a `Symbol` primitive or object.\n *\n * @static\n * @memberOf _\n * @since 4.0.0\n * @category Lang\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.\n * @example\n *\n * _.isSymbol(Symbol.iterator);\n * // => true\n *\n * _.isSymbol('abc');\n * // => false\n */\n\nfunction isSymbol(value) {\n  return typeof value == 'symbol' || isObjectLike(value) && baseGetTag(value) == symbolTag;\n}\n\nmodule.exports = isSymbol;\n\n//# sourceURL=webpack:///./node_modules/lodash/isSymbol.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/toString.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/toString.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseToString = __webpack_require__(/*! ./_baseToString */ \"./node_modules/lodash/_baseToString.js\");\n/**\n * Converts `value` to a string. An empty string is returned for `null`\n * and `undefined` values. The sign of `-0` is preserved.\n *\n * @static\n * @memberOf _\n * @since 4.0.0\n * @category Lang\n * @param {*} value The value to convert.\n * @returns {string} Returns the converted string.\n * @example\n *\n * _.toString(null);\n * // => ''\n *\n * _.toString(-0);\n * // => '-0'\n *\n * _.toString([1, 2, 3]);\n * // => '1,2,3'\n */\n\n\nfunction toString(value) {\n  return value == null ? '' : baseToString(value);\n}\n\nmodule.exports = toString;\n\n//# sourceURL=webpack:///./node_modules/lodash/toString.js?");
 
 /***/ }),
 
@@ -191,6 +455,17 @@ eval("/** @license React v16.13.1\n * react-dom.development.js\n *\n * Copyright
 
 "use strict";
 eval("\n\nfunction checkDCE() {\n  /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */\n  if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ === 'undefined' || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE !== 'function') {\n    return;\n  }\n\n  if (true) {\n    // This branch is unreachable because this function is only called\n    // in production, but the condition is true only in development.\n    // Therefore if the branch is still here, dead code elimination wasn't\n    // properly applied.\n    // Don't change the message. React DevTools relies on it. Also make sure\n    // this message doesn't occur elsewhere in this function, or it will cause\n    // a false positive.\n    throw new Error('^_^');\n  }\n\n  try {\n    // Verify that the code above has been dead code eliminated (DCE'd).\n    __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE(checkDCE);\n  } catch (err) {\n    // DevTools shouldn't crash React, no matter what.\n    // We should still report in case we break this code.\n    console.error(err);\n  }\n}\n\nif (false) {} else {\n  module.exports = __webpack_require__(/*! ./cjs/react-dom.development.js */ \"./node_modules/react-dom/cjs/react-dom.development.js\");\n}\n\n//# sourceURL=webpack:///./node_modules/react-dom/index.js?");
+
+/***/ }),
+
+/***/ "./node_modules/react-string-replace/index.js":
+/*!****************************************************!*\
+  !*** ./node_modules/react-string-replace/index.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("/* eslint-disable vars-on-top, no-var, prefer-template */\nvar isRegExp = __webpack_require__(/*! lodash/isRegExp */ \"./node_modules/lodash/isRegExp.js\");\n\nvar escapeRegExp = __webpack_require__(/*! lodash/escapeRegExp */ \"./node_modules/lodash/escapeRegExp.js\");\n\nvar isString = __webpack_require__(/*! lodash/isString */ \"./node_modules/lodash/isString.js\");\n\nvar flatten = __webpack_require__(/*! lodash/flatten */ \"./node_modules/lodash/flatten.js\");\n/**\n * Given a string, replace every substring that is matched by the `match` regex\n * with the result of calling `fn` on matched substring. The result will be an\n * array with all odd indexed elements containing the replacements. The primary\n * use case is similar to using String.prototype.replace except for React.\n *\n * React will happily render an array as children of a react element, which\n * makes this approach very useful for tasks like surrounding certain text\n * within a string with react elements.\n *\n * Example:\n * matchReplace(\n *   'Emphasize all phone numbers like 884-555-4443.',\n *   /([\\d|-]+)/g,\n *   (number, i) => <strong key={i}>{number}</strong>\n * );\n * // => ['Emphasize all phone numbers like ', <strong>884-555-4443</strong>, '.'\n *\n * @param {string} str\n * @param {regexp|str} match Must contain a matching group\n * @param {function} fn\n * @return {array}\n */\n\n\nfunction replaceString(str, match, fn) {\n  var curCharStart = 0;\n  var curCharLen = 0;\n\n  if (str === '') {\n    return str;\n  } else if (!str || !isString(str)) {\n    throw new TypeError('First argument to react-string-replace#replaceString must be a string');\n  }\n\n  var re = match;\n\n  if (!isRegExp(re)) {\n    re = new RegExp('(' + escapeRegExp(re) + ')', 'gi');\n  }\n\n  var result = str.split(re); // Apply fn to all odd elements\n\n  for (var i = 1, length = result.length; i < length; i += 2) {\n    curCharLen = result[i].length;\n    curCharStart += result[i - 1].length;\n    result[i] = fn(result[i], i, curCharStart);\n    curCharStart += curCharLen;\n  }\n\n  return result;\n}\n\nmodule.exports = function reactStringReplace(source, match, fn) {\n  if (!Array.isArray(source)) source = [source];\n  return flatten(source.map(function (x) {\n    return isString(x) ? replaceString(x, match, fn) : x;\n  }));\n};\n\n//# sourceURL=webpack:///./node_modules/react-string-replace/index.js?");
 
 /***/ }),
 
@@ -263,6 +538,28 @@ eval("\n\nif (false) {} else {\n  module.exports = __webpack_require__(/*! ./cjs
 
 "use strict";
 eval("\n\nif (false) {} else {\n  module.exports = __webpack_require__(/*! ./cjs/scheduler-tracing.development.js */ \"./node_modules/scheduler/cjs/scheduler-tracing.development.js\");\n}\n\n//# sourceURL=webpack:///./node_modules/scheduler/tracing.js?");
+
+/***/ }),
+
+/***/ "./node_modules/webpack/buildin/global.js":
+/*!***********************************!*\
+  !*** (webpack)/buildin/global.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("var g; // This works in non-strict mode\n\ng = function () {\n  return this;\n}();\n\ntry {\n  // This works if eval is allowed (see CSP)\n  g = g || new Function(\"return this\")();\n} catch (e) {\n  // This works if the window reference is available\n  if (typeof window === \"object\") g = window;\n} // g can still be undefined, but nothing to do about it...\n// We return undefined, instead of nothing here, so it's\n// easier to handle this case. if(!global) { ...}\n\n\nmodule.exports = g;\n\n//# sourceURL=webpack:///(webpack)/buildin/global.js?");
+
+/***/ }),
+
+/***/ "./node_modules/webpack/buildin/module.js":
+/*!***********************************!*\
+  !*** (webpack)/buildin/module.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = function (module) {\n  if (!module.webpackPolyfill) {\n    module.deprecate = function () {};\n\n    module.paths = []; // module.parent = undefined by default\n\n    if (!module.children) module.children = [];\n    Object.defineProperty(module, \"loaded\", {\n      enumerable: true,\n      get: function () {\n        return module.l;\n      }\n    });\n    Object.defineProperty(module, \"id\", {\n      enumerable: true,\n      get: function () {\n        return module.i;\n      }\n    });\n    module.webpackPolyfill = 1;\n  }\n\n  return module;\n};\n\n//# sourceURL=webpack:///(webpack)/buildin/module.js?");
 
 /***/ })
 

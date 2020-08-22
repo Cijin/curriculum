@@ -1,16 +1,18 @@
 import React from 'react';
+import reactStringReplace from 'react-string-replace';
 
 function Suggestion (props) {
-  const str = props.name.replace(props.replace, 
-    `<span class='match'>${props.replace}</span>`);
-
+  const handleClick = () => {
+    props.handleClick(props.name);
+  };
+  
   return (
     <div>
-      <h3 onClick={props.handleClick}>
+      <h3 onClick={handleClick}>
         {
-          props.name.replace(props.replaceStr,
-            <span className="match">{props.replace}</span>
-          )
+          reactStringReplace(props.name, props.replaceStr, (match, i) => (
+            <span className="match" key={i}>{match}</span>
+          ))
         }
       </h3>
     </div>
