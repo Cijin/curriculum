@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import sendQuery from './sendQuery';
 import Suggestion from './suggestion';
 
@@ -8,6 +9,15 @@ function Login(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [suggestions, setSuggestions] = useState([]);
   const inputEl = useRef(null);
+  const redirectPath = useHistory();
+  
+  const debounce = (fn, time) => {
+    let timeout;
+    return () => {
+      clearTimeout(timeout)
+      timeout = setTimeout(fn, time);
+    };
+  };
 
   const loadPokemon = (name) => {
     sendQuery(`{getPokemon(str:"${name}"){name, image}}`)
@@ -26,32 +36,24 @@ function Login(props) {
     }
     return;    
   };
-
+  
+  const handleChange = debounce(() => {
+    const str = inputEl.current.value;
+    sendQuery(`{search(str: "${str}"){name}}`)
+    .then((data) => {
+      const results = data.search || [];          
+      const names = results.reduce((acc, pokemon) => {
+        return acc.concat(pokemon.name);
+      }, []);
+      setSuggestions(names);
+    });
+  }, 500);
+  
   const login = () => {
     sendQuery(`
       {login (pokemon: "${pokemonName}"){name}}
-    `).then((result) => window.location.reload);
+    `).then((result) => redirectPath.push('/classroom'));
   };
-
-  const debounce = (fn, time) => {
-    let timeout;
-    return () => {
-      clearTimeout(timeout)
-      timeout = setTimeout(fn, time);
-    };
-  };
-
-  const handleChange = debounce(() => {
-      const str = inputEl.current.value;
-      sendQuery(`{search(str: "${str}"){name}}`)
-        .then((data) => {
-          const results = data.search || [];          
-          const names = results.reduce((acc, pokemon) => {
-            return acc.concat(pokemon.name);
-          }, []);
-          setSuggestions(names);
-        });
-    }, 500);
 
   return (
     <div>
