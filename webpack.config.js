@@ -1,4 +1,4 @@
-t path = require('path');
+const path = require('path');
   2 
   3 module.exports  = {
   4   entry: './js6/public/4/components/app.js',
