@@ -6,7 +6,7 @@ const morgan = require('morgan');
 app.use(morgan('dev'));
 app.use(express.static(path.resolve(__dirname, 'dist')));
 
-app.get('/', (req, res) => {
+app.get('/*', (req, res) => {
   return res.sendFile(path.resolve(__dirname, 'index.html'));
 });
 
