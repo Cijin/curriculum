@@ -23,13 +23,6 @@ function Classroom () {
       <h1>{name}</h1>
       <img src={image}></img>
     </div>
-    <div className="notEnrolled">
-      {
-        notEnrolled.map((lesson) => {
-          <h3>
-        });      
-      }  
-    </div>
       )
 };
 
