@@ -5,7 +5,7 @@
   "scripts": {
     "test": "node ./node_modules/jest/bin/jest.js -o --watch",
     "build": "webpack",
-    "start": "wepack --watch"
+    "start": "webpack --watch"
   },
   "dependencies": {
     "@babel/preset-react": "^7.10.4",
