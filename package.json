@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "test": "node ./node_modules/jest/bin/jest.js -o --watch",
+    "build": "webpack",
     "start": "wepack --watch"
   },
   "dependencies": {
