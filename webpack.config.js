@@ -1,5 +1,5 @@
 const path = require('path');
- 
+
 module.exports  = {
   entry: './js6/public/4/components/app.js',
   mode: 'development',
