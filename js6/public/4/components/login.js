@@ -2,24 +2,16 @@ import React, { useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import sendQuery from './sendQuery';
 import Suggestion from './suggestion';
+import Search form './search';
 
 function Login(props) {
   const [pokemonName, setPokemonName] = useState("");
   const [image, setImage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [suggestions, setSuggestions] = useState([]);
-  const inputEl = useRef(null);
   const redirectPath = useHistory();
   
-  const debounce = (fn, time) => {
-    let timeout;
-    return () => {
-      clearTimeout(timeout)
-      timeout = setTimeout(fn, time);
-    };
-  };
-
-  const loadPokemon = (name) => {
+    const loadPokemon = (name) => {
     sendQuery(`{getPokemon(str:"${name}"){name, image}}`)
       .then((result) => {
         setPokemonName(result.getPokemon.name);
@@ -30,15 +22,7 @@ function Login(props) {
       });
   };
 
-  const handleKeyDown = (e) => {
-    if (e.keyCode === 13 && e.target.value) {
-      loadPokemon(e.target.value);    
-    }
-    return;    
-  };
-  
-  const handleChange = debounce(() => {
-    const str = inputEl.current.value;
+    const handleChange = (str) => {
     sendQuery(`{search(str: "${str}"){name}}`)
     .then((data) => {
       const results = data.search || [];          
@@ -47,7 +31,7 @@ function Login(props) {
       }, []);
       setSuggestions(names);
     });
-  }, 500);
+  }
   
   const login = () => {
     sendQuery(`
@@ -56,15 +40,12 @@ function Login(props) {
   };
 
   return (
-    <div>
-      <h1>Pokemon Search</h1>
-      <input className="searchBox"
-        type="text"
-        ref={inputEl}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}>
-      </input>
-      <div className="suggestions">
+   <div>
+     <Search 
+       handleChange={handleChange}
+       loadPokemon={loadPokemon}
+     />
+     <div className="suggestions">
         {
           suggestions.map((pokemon, idx) => {
             return <Suggestion name={pokemon}
