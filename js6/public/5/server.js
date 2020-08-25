@@ -5,7 +5,8 @@ const morgan = require('morgan');
 app.use(morgan('dev'));
 
 app.get('/images', (req, res) => {
-  res.send('Request Recieved');
+  console.log('Request Recieved');
+  return res.send('Request Recieved');
 });
 
 app.listen({ port: 8123 }, () => {
