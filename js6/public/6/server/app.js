@@ -26,7 +26,7 @@ const server = new ApolloServer({
   }
 });
 
-server.applyMiddleware({ app });
+ server.applyMiddleware({ app });
 
 app.get("/*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "./index.html"));
