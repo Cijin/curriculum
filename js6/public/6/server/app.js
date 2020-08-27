@@ -1,20 +1,20 @@
-const path = require("path");
-const session = require("express-session");
-const { ApolloServer } = require("apollo-server-express");
-const express = require("express");
+const path = require('path');
+const session = require('express-session');
+const { ApolloServer } = require('apollo-server-express');
+const express = require('express');
 const app = express();
-const { typeDefs, resolvers } = require("./schema");
+const { typeDefs, resolvers } = require('./schema');
 
 app.use(
   session({
-    name: "oreo",
-    secret: "cookie&cream",
+    name: 'oreo',
+    secret: 'cookie&cream',
     resave: false,
     saveUnintialized: false,
     cookie: {
       httpOnly: true,
-      maxAge: 10000
-    }
+      maxAge: 10000,
+    },
   })
 );
 
@@ -23,11 +23,11 @@ const server = new ApolloServer({
   resolvers,
   context: ({ req }) => {
     return { req };
-  }
+  },
 });
 
- server.applyMiddleware({ app });
+server.applyMiddleware({ app });
 
-app.get("/*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./index.html"));
+app.get('/*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, './index.html'));
 });
