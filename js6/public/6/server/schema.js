@@ -2,16 +2,19 @@ const { gql } = require('apollo-server-express');
 const fetch = require('node-fetch');
 const { allPokemons } = require('../server');
 let allLessons = {};
+let userInfo = {};
 let userCache = {};
 
 const typeDefs = gql`
   type Lesson {
     title: String
+    rating: Int
   }
 
   type Mutation {
     enroll(title: String!): User
     unenroll(title: String!): User
+    setRating(title: String, value: Int): User
   }
 
   type Pokemon {
@@ -63,24 +66,37 @@ const resolvers = {
         userCache[pokemon] = {};
         userCache[pokemon].name = allPokemons[pokemon].name;
         userCache[pokemon].image = allPokemons[pokemon].image;
-        userCache[pokemon].lessons = {};
+        const lessons = userInfo[pokemon].lessons || {};
+
+        userCache[pokemon].lessons = Object.entries(lessons).map(
+          ([title, rating]) => {
+            return { title, rating };
+          }
+        );
       }
       return userCache[pokemon];
     },
 
     user: (_, _, { req }) => {
-      return req.session.user || {};
+      const pokemon = req.session.user;
+      return userCache[pokemon];
     },
   },
 
   Mutation: {
-    enroll: (_, { title }, { req }) => {
+    enroll: (_, { title, value }, { req }) => {
       const pokemon = req.session.user;
       if (!pokemon) return;
 
       const lessons = userCache[pokemon].lessons || {};
-      lessons[title] = true;
-      userCache[pokemon].lessons = lessons;
+      lessons[title] = value;
+      userCache[pokemon].lessons = Object.entries(lessons).map(
+        ([title, rating]) => {
+          return { title, rating };
+        }
+      );
+      userInfo[pokemon].lessons = {};
+      userInfo[pokemon].lessons[title] = value;
 
       return userCache[pokemon];
     },
@@ -89,12 +105,32 @@ const resolvers = {
       const pokemon = req.session.user;
       if (!pokemon) return;
 
-      const lessons = userCache[pokemon].lessons;
-      delete lessons[title];
-      userCache[pokemon].lessons = lessons;
+      delete userInfo[pokemon].lessons[title];
+      const lessons = userInfo[pokemon].lessons;
+      userCache[pokemon].lessons = Object.entries(lessons).map(
+        ([title, rating]) => {
+          return { title, rating };
+        }
+      );
 
       return userCache[pokemon];
     },
+  },
+
+  setRating: (_, { title, value }, { req }) => {
+    const pokemon = req.session.pokemon;
+    if (!pokemon) return;
+
+    userInfo[pokemon].lessons[title] = value;
+    const lessond = userInfo[pokemon].lessons;
+
+    userCache[pokemon].lessons = Object.entries(lessons).map(
+      ([title, rating]) => {
+        return { title, rating };
+      }
+    );
+
+    return userCache[pokemon];
   },
 };
 

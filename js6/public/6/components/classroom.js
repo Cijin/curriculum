@@ -18,16 +18,20 @@ function Classroom() {
   });
 
   const handleEnroll = (title) => {
-    sendQuery(`mutation{unenroll(title: "${title}")}`).then((data) => {
-      setEnrolled(enrolled.filter((lesson) => lesson !== title));
-      setUnenrolled(title, ...unenrolled);
+    sendQuery(
+      `mutation{unenroll(title: "${title}"){lessons {title, rating}}}`
+    ).then((data) => {
+      setEnrolled(enrolled.filter((lesson) => lesson.title !== title));
+      setUnenrolled(data.lessons[title], ...unenrolled);
     });
   };
 
   const handleUnenroll = (title) => {
-    sendQuery(`mutation {enroll {title: "${title}"}}`).then((data) => {
-      setUnenrolled(unenrolled.filter((lesson) => lesson !== title));
-      setEnrolled(...enrolled, title);
+    sendQuery(
+      `mutation {enroll (title: "${title}"){lessons{title, rating}}}`
+    ).then((data) => {
+      setUnenrolled(unenrolled.filter((lesson) => lesson.title !== title));
+      setEnrolled(...enrolled, data.lessons[title]);
     });
   };
 
@@ -37,8 +41,12 @@ function Classroom() {
         <h1>{name}</h1>
         <img src={image}></img>
       </div>
-      <Lesson lessons={enrolled} handleClick={handleEnroll} />
-      <Lesson lessons={unenrolled} handleClick={handleUnenroll} />
+      <Lesson lessons={enrolled} handleClick={handleEnroll} rating={true} />
+      <Lesson
+        lessons={unenrolled}
+        handleClick={handleUnenroll}
+        rating={false}
+      />
     </div>
   );
 }

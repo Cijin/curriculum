@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 function Star(props) {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(props.value || 0);
   const [isLocked, setIsLocked] = useState(false);
 
   const stars = [1, 2, 3, 4, 5].map((star, idx) => {
@@ -20,6 +20,7 @@ function Star(props) {
     const onClick = () => {
       setIsLocked(true);
       setValue(star);
+      props.onClick();
     };
 
     return (
