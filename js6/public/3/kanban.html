@@ -1,0 +1,237 @@
+<head>
+  <title>Kanban & Stars with React</title>
+  <style>
+    .kanban {
+      display: flex;
+      justify-content: space-around;
+      margin: 0 30px;
+    }
+
+    .todoListCotainer {
+      width: 100%;
+    }
+
+    .inputContainer {
+      display: flex;      
+      height: 80px;
+    }
+
+    .submit {
+      height: 100%;
+    }
+
+    .todoContainer {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      margin: 10px 0;
+      text-align: center;
+    }
+  </style>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" />
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+      
+    //stars component begins here 
+    function Star() {
+      const [value, setValue] = React.useState(0);
+      const [isLocked, setIsLocked] = React.useState(false);
+
+      const stars = [1, 2, 3, 4, 5].map((star, idx) => {
+        const mouseMove = () => {
+          if (isLocked) {
+            return;
+          }
+          setValue(star);
+        };
+
+        let classVal = 'far';
+        if(star <= value) {
+          classVal = 'fas';
+        }
+
+        const onClick = () => {
+          setIsLocked(true);
+          setValue(star);
+        };
+        
+        return (
+          <i 
+            className={`${classVal} fa-star`} 
+            key={idx}
+            onClick={onClick} 
+            onMouseMove={mouseMove}
+          />
+        );
+      });
+      let message = `You are giving ${value} stars`;
+      if (isLocked) {
+        message = `You have given ${value} stars`;
+      }
+      const divMouseEnter = () => {
+        setIsLocked(false);
+      }
+
+      return (
+          <div onMouseEnter={divMouseEnter}>
+            {stars}
+            <p>{message}</p>
+          </div>
+      )
+    };
+
+    //Kanban board starts from here on
+    function Board(props) {
+      const [tasks, setTasks] = React.useState(props.data.tasks);
+      const [value, setValue] = React.useState('');
+
+      const handleChange = (e) => {
+        setValue(e.target.value);
+      }
+
+      const handleClick = () => {
+        if (!value) {
+          return;
+        }
+        const updatedTasks = [value, ...tasks];
+        setTasks( updatedTasks );
+        setValue('');
+        props.onTaskChange(updatedTasks);
+      };
+
+      const allTasks = tasks.map((task, idx) => {
+        const removeTask = () => {
+          const updatedTasks = [...tasks];
+          updatedTasks.splice(idx, 1);
+          setTasks( updatedTasks );
+          props.onTaskChange(updatedTasks);
+        }
+        
+        const deleteTask = () => {
+          if (!confirm(`Are you sure you want to delete ${task}?`)) {
+            return;
+          }
+          removeTask();
+        };
+
+        const moveLeft = () => {
+          if (props.boardId === 0) {
+            return;
+          }
+          removeTask();
+          props.moveLeft(task);
+        }
+
+        const moveRight = () => {
+          if (props.boardId === 3) {
+            return;
+          }
+          removeTask();
+          props.moveRight(task);
+        }
+
+        return (
+          <div className="todoContainer" key={tasks+idx}>
+            <div className="moveLeft" onClick={moveLeft}>&lt;</div>
+            <div className="task" onClick={deleteTask}>{task}</div>
+            <div className="moveRight" onClick={moveRight}>&gt;</div>
+          </div>
+        );
+      });
+
+      return (
+        <div className="board" style={{width:"300px"}}>
+          <div className="todoListContainer">
+            <div className="title"
+              color={props.data.color}>
+              {props.data.header}
+            </div>
+            {allTasks}
+            <div className="inputContainer">
+              <textarea style={{width:"100%"}} rows="5" 
+                className="newTask" 
+                onChange={handleChange} value={value}>
+              </textarea>
+              <button className="submit" 
+                onClick={handleClick}>Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )
+    };
+    //inital board data
+    const starterData = [{header: "To-Do", color: "Red", tasks: []}, 
+      {header: "Doing", color:"blue", tasks: []}, {header: "Done", color:"green", tasks: []},
+      {header: "Approved", color:"purple", tasks: []}];
+
+    function Kanban(props) {
+      let intialData = starterData;
+      if(props.data && props.data.length === 4) {
+        intialData = props.data;
+      }
+      //primarily used for moving elements around, ex: move left, right
+      const [boardsData, setBoardsData] = React.useState(intialData);
+
+      const boards = boardsData.map((boardData, idx) => {
+        const updateTasks = (updatedTasks) => {
+          boardData.tasks = updatedTasks;
+          window.localStorage.setItem('kanban', JSON.stringify(boardsData));
+        };
+
+        const moveLeft = (newTask) => {
+          boardsData[idx - 1].tasks.push(newTask);
+          setBoardsData([...boardsData]);
+          window.localStorage.setItem('kanban', JSON.stringify(boardsData));
+        };
+
+        const moveRight = (newTask) => {
+          boardsData[idx + 1].tasks.push(newTask);
+          setBoardsData([...boardsData]);
+          window.localStorage.setItem('kanban', JSON.stringify(boardsData));
+        };
+
+        return <Board data={boardData} 
+          key={idx}
+          boardId={idx}
+          moveLeft={moveLeft}
+          moveRight={moveRight}
+          onTaskChange={updateTasks}/>
+      });
+
+      return (
+        <div className="kanban">
+          {boards}
+        </div>
+      ); 
+    };
+
+    //switch between kanban and stars
+    const App = () => {
+      const appPath = window.location.pathname.split('/').pop();
+      if (appPath.toLowerCase() === 'stars') {
+        return (
+          <Star />
+        );
+      }
+      const kanbanData = JSON.parse(window.localStorage.getItem('kanban' || '[]'))
+      return (
+        <Kanban data={kanbanData} />
+      )          
+    };
+    
+    ReactDOM.render(
+      <App />,
+      document.getElementById('root')
+    );
+  </script>
+</body>
