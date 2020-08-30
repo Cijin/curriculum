@@ -5,6 +5,9 @@ const { typeDefs, resolvers } = require('./server/schema');
 const path = require('path');
 const session = require('express-session');
 const fetch = require('node-fetch');
+const morgan = require('morgan');
+
+app.use(morgan('dev'));
 
 app.use(
   session({
@@ -22,8 +25,12 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app });
 
-app.get('/*', (req, res) => {
+app.get('/', (req, res) => {
   return res.sendFile(path.resolve(__dirname, 'index.html'));
+});
+
+app.get('/dist/main.js', (req, res) => {
+  return res.sendFile(path.resolve(__dirname, 'dist/main.js'));
 });
 
 app.listen({ port: 8123 }, () => {
