@@ -22,6 +22,10 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app });
 
+app.get('/*', (req, res) => {
+  return res.sendFile(path.resolve(__dirname, 'index.html'));
+});
+
 app.listen({ port: 8123 }, () => {
   console.log(`🚀 Server ready at http://localhost:8123${server.graphqlPath}`);
 });
