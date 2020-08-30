@@ -21,17 +21,17 @@ function Login(props) {
     const str = inputEl.current.value;
     sendQuery(`{ search(str: "${str}") { name } }`).then((data) => {
       const results = data.search || [];
-      const names = results.reduce((acc, name, idx) => {
-        return (acc += (
-          <h3 onClick={handleClick}>
-            {reactStringReplace(name, str, (match, i) => (
-              <span className="match" key={i}>
+      const names = results.map((pokemon, idx) => {
+        return (
+          <h3 onClick={handleClick} key={pokemon.name + idx}>
+            {reactStringReplace(pokemon.name, str, (match, idx) => (
+              <span className="match" key={idx}>
                 {match}
               </span>
             ))}
           </h3>
-        ));
-      }, '');
+        );
+      });
       setSuggestions(names);
     });
   }, 400);

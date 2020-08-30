@@ -1,5 +1,5 @@
 const sendQuery = (query) => {
-  return fetch('https://js5.c0d3.com/js6c2/graphql', {
+  return fetch('http://localhost:8123/graphql', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
