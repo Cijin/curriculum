@@ -15,6 +15,8 @@ function Login(props) {
   const inputEl = useRef(null);
   const [suggestions, setSuggestions] = useState('');
 
+  const handleClick = () => {};
+
   const handleChange = debounce(() => {
     const str = inputEl.current.value;
     sendQuery(`{ search(str: "${str}") { name } }`).then((data) => {
@@ -30,14 +32,14 @@ function Login(props) {
           </h3>
         ));
       }, '');
-      setSuggestion(names);
+      setSuggestions(names);
     });
-  }, 500);
+  }, 400);
 
   return (
     <div>
       <h1>Pokemon Search</h1>
-      <input ref={inputEl} className="searchBox" />
+      <input onChange={handleChange} ref={inputEl} className="searchBox" />
       <div>{suggestions}</div>
     </div>
   );
