@@ -28,7 +28,7 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app });
 
-app.get('/', (req, res) => {
+app.get('/:classroom?', (req, res) => {
   return res.sendFile(path.resolve(__dirname, 'index.html'));
 });
 

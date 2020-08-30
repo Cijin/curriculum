@@ -3,6 +3,7 @@ const fetch = require('node-fetch');
 let allPokemons = [];
 let pokeCache = {};
 let userCache = {};
+let lessonsCache = {};
 
 fetch('https://pokeapi.co/api/v2/pokemon/?limit=1000')
   .then((res) => res.json())
@@ -93,6 +94,37 @@ const resolvers = {
       const pokemon = req.session.user;
       if (!userCache[pokemon]) return;
 
+      return userCache[pokemon];
+    },
+  },
+
+  Mutation: {
+    enroll: (_, { title }, { req }) => {
+      const pokemon = req.session.user;
+      if (!pokemon && !userCache[pokemon]) return [];
+
+      const lessons = lessonsCache[pokemon] || {};
+      lessons[title] = 0;
+      lessonsCache[pokemon] = lessons;
+      userCache[pokemon].lessons = Object.keys(lessons).map((value) => {
+        return {
+          title: value,
+        };
+      });
+      return userCache[pokemon];
+    },
+
+    unenroll: (_, { title }, { req }) => {
+      const pokemon = req.session.user;
+      if (!pokemon && !userCache[pokemon]) return [];
+
+      const lessons = lessonsCache[pokemon];
+      delete lessons[title];
+      userCache[pokemon].lessons = Object.keys(lessons).map((value) => {
+        return {
+          title: value,
+        };
+      });
       return userCache[pokemon];
     },
   },

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import sendQuery from './sendQuery';
 
 function Classroom(props) {
@@ -9,16 +9,28 @@ function Classroom(props) {
   });
   const [unenrolled, setUnenrolled] = useState([]);
 
-  sendQuery(
-    `{ user { name, image, lessons { title } } lessons { title } }`
-  ).then((data) => {
-    setUser({
-      name: data.user.name,
-      image: data.user.image,
-      lessons: data.user.lessons,
-    });
-    setUnenrolled(data.lessons);
+  useEffect(() => {
+    sendQuery(
+      `{ user { name, image, lessons { title } } lessons { title } }`
+    ).then(
+      (data) => {
+        if (data && data.user) {
+          setUser(data.user);
+        } else {
+          setUser({});
+        }
+        setUnenrolled(data.lessons);
+      },
+      [user, unenrolled]
+    );
   });
+
+  return (
+    <div>
+      <h1>{user.name}</h1>
+      <img src={user.image} />
+    </div>
+  );
 }
 
 export default Classroom;
