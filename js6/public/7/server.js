@@ -14,13 +14,16 @@ app.use(
     secret: 'cookies&cream',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: true, httpOnly: true, maxAge: 100000 },
+    cookie: { httpOnly: true, maxAge: 100000 },
   })
 );
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: ({ req }) => {
+    return { req };
+  },
 });
 
 server.applyMiddleware({ app });

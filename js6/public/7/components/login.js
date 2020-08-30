@@ -21,6 +21,7 @@ function Login(props) {
   const inputEl = useRef(null);
   const [suggestions, setSuggestions] = useState('');
   const [pokemon, setPokemon] = useState({ name: '', image: '' });
+  const redirectPath = useHistory();
 
   const handleKeyDown = async (e) => {
     if (e.keyCode === 13 && e.target.value) {
@@ -65,6 +66,14 @@ function Login(props) {
     });
   }, 400);
 
+  const login = () => {
+    if (pokemon.name) {
+      sendQuery(
+        `{ login (pokemon: "${pokemon.name}") {name, image, lessons { title }} }`
+      ).then((data) => redirectPath.push('/classroom'));
+    }
+  };
+
   return (
     <div>
       <h1>Pokemon Search</h1>
@@ -78,7 +87,11 @@ function Login(props) {
       <div>
         <h3>{pokemon.name}</h3>
         <img src={pokemon.image} />
-        {pokemon.name && <button className="loginButton">Login</button>}
+        {pokemon.name && (
+          <button className="loginButton" onClick={login}>
+            Login
+          </button>
+        )}
       </div>
     </div>
   );

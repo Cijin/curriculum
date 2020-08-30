@@ -2,6 +2,7 @@ const { gql } = require('apollo-server-express');
 const fetch = require('node-fetch');
 let allPokemons = [];
 let pokeCache = {};
+let userCache = {};
 
 fetch('https://pokeapi.co/api/v2/pokemon/?limit=1000')
   .then((res) => res.json())
@@ -38,8 +39,8 @@ const typeDefs = gql`
     lessons: [Lesson]
     search(str: String!): [Pokemon]
     getPokemon(str: String!): Pokemon
-    user: User
     login(pokemon: String!): User
+    user: User
   }
 
   type Mutation {
@@ -65,6 +66,7 @@ const resolvers = {
             name: data.name,
             image: data.sprites.front_default,
           };
+          pokeCache[str] = {};
           pokeCache[str] = result;
           return result;
         });
@@ -74,6 +76,24 @@ const resolvers = {
       return allPokemons.filter((pokemon) => {
         return pokemon.name.includes(str);
       });
+    },
+
+    login: (_, { pokemon }, { req }) => {
+      req.session.user = pokemon;
+      if (!userCache[pokemon]) {
+        userCache[pokemon] = {};
+        userCache[pokemon].name = pokeCache[pokemon].name;
+        userCache[pokemon].image = pokeCache[pokemon].image;
+        userCache[pokemon].lessons = [];
+      }
+      return userCache[pokemon];
+    },
+
+    user: (_, args, { req }) => {
+      const pokemon = req.session.user;
+      if (!userCache[pokemon]) return;
+
+      return userCache[pokemon];
     },
   },
 };
