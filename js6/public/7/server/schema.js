@@ -23,6 +23,7 @@ const allLessons = [
 const typeDefs = gql`
   type Lesson {
     title: String
+    rating: Int
   }
 
   type Pokemon {
@@ -47,7 +48,7 @@ const typeDefs = gql`
   type Mutation {
     enroll(title: String!): User
     unenroll(title: String!): User
-    setRating(rating: Int!): User
+    setRating(title: String!, rating: Int!): User
   }
 `;
 
@@ -106,11 +107,14 @@ const resolvers = {
       const lessons = lessonsCache[pokemon] || {};
       lessons[title] = 0;
       lessonsCache[pokemon] = lessons;
-      userCache[pokemon].lessons = Object.keys(lessons).map((value) => {
-        return {
-          title: value,
-        };
-      });
+      userCache[pokemon].lessons = Object.entries(lessons).map(
+        ([key, value]) => {
+          return {
+            title: key,
+            rating: value,
+          };
+        }
+      );
       return userCache[pokemon];
     },
 
@@ -125,6 +129,25 @@ const resolvers = {
           title: value,
         };
       });
+      return userCache[pokemon];
+    },
+
+    setRating: (_, { title, rating }, { req }) => {
+      const pokemon = req.session.user;
+      if (!pokemon && !userCache[pokemon]) return [];
+
+      const lessons = lessonsCache[pokemon];
+      lessons[title] = rating;
+      lessonsCache[pokemon] = lessons;
+
+      userCache[pokemon].lessons = Object.entries(lessons).map(
+        ([key, value]) => {
+          return {
+            title: key,
+            rating: value,
+          };
+        }
+      );
       return userCache[pokemon];
     },
   },

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-//import Star from 'stars';
+import Stars from './stars';
 import sendQuery from './sendQuery';
 
 function Lessons({ enrolledObj, lessons }) {
-  const enrolled = enrolledObj.map((lesson) => lesson.title);
-  const [enrolledLessons, setEnrolledLessons] = useState(enrolled);
+  const [enrolledLessons, setEnrolledLessons] = useState(enrolledObj);
 
+  const enrolledArray = enrolledLessons.map((lesson) => lesson.title);
   const unenrolled = lessons.filter((lesson) => {
-    return !enrolledLessons.includes(lesson.title);
+    return !enrolledArray.includes(lesson.title);
   });
 
   const unenrolledComponent = unenrolled.map((lesson, idx) => {
@@ -15,7 +15,7 @@ function Lessons({ enrolledObj, lessons }) {
       sendQuery(`
         mutation { enroll (title: "${lesson.title}") { name } }
       `).then(() => {
-        setEnrolledLessons([...enrolledLessons, lesson.title]);
+        setEnrolledLessons([...enrolledLessons, { title: lesson.title }]);
       });
     };
 
@@ -29,7 +29,7 @@ function Lessons({ enrolledObj, lessons }) {
   const enrolledComponent = enrolledLessons.map((lesson, idx) => {
     const unenroll = () => {
       sendQuery(`
-        mutation { enroll (title: "${lesson}") { name } }
+        mutation { unenroll (title: "${lesson.title}") { name } }
       `).then(() => {
         const newLessons = [...enrolledLessons];
         newLessons.splice(idx, 1);
@@ -38,9 +38,10 @@ function Lessons({ enrolledObj, lessons }) {
     };
 
     return (
-      <h3 key={idx} onClick={unenroll}>
-        {lesson}
-      </h3>
+      <div key={idx}>
+        <h3 onClick={unenroll}>{lesson.title}</h3>
+        <Stars value={lesson.rating} title={lesson.title}></Stars>
+      </div>
     );
   });
 

@@ -12,7 +12,7 @@ function Classroom(props) {
 
   useEffect(() => {
     sendQuery(
-      `{ user { name, image, lessons { title } } lessons { title } }`
+      `{ user { name, image, lessons { title, rating } } lessons { title } }`
     ).then((data) => {
       if (data && data.user) {
         setUser(data.user);
