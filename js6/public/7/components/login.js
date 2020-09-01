@@ -22,11 +22,10 @@ const loadPokemon = async (pokemon) => {
 
 function Login(props) {
   const inputEl = useRef(null);
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState('');
   const [pokemon, setPokemon] = useState({ name: '', image: '' });
   const redirectPath = useHistory();
   const [getPokemon, { loading, data }] = useLazyQuery(Queries.GET_POKEMON);
-  console.log(data);
 
   const handleKeyDown = async (e) => {
     if (e.keyCode === 13 && e.target.value) {
@@ -45,36 +44,31 @@ function Login(props) {
     const str = inputEl.current.value;
     sendQuery(`{ search(str: "${str}") { name } }`).then((data) => {
       const results = data.search || [];
-      setSuggestions(results);
-    });
-  }, 400);
 
-  if (suggestions.length) {
-    const results = suggestions.map((pokemon, idx) => {
-      const handleClick = async () => {
-        getPokemon({ variables: { name: pokemon.name } });
-
-        if (data && data.getPokemon && data.getPokemon.name) {
+      const names = results.map((pokemon, idx) => {
+        const handleClick = async () => {
+          getPokemon({ variables: { name: pokemon.name } });
           setPokemon({
-            name: data.getPokemon.name,
-            image: data.getPokemon.image,
+            name: data.name,
+            image: data.image,
           });
           setSuggestions('');
           inputEl.current.value = '';
-        }
-      };
+        };
 
-      return (
-        <h3 onClick={handleClick} key={pokemon.name + idx}>
-          {reactStringReplace(pokemon.name, str, (match, idx) => (
-            <span className="match" key={idx}>
-              {match}
-            </span>
-          ))}
-        </h3>
-      );
+        return (
+          <h3 onClick={handleClick} key={pokemon.name + idx}>
+            {reactStringReplace(pokemon.name, str, (match, idx) => (
+              <span className="match" key={idx}>
+                {match}
+              </span>
+            ))}
+          </h3>
+        );
+      });
+      setSuggestions(names);
     });
-  }
+  }, 400);
 
   const login = () => {
     if (pokemon.name) {
@@ -93,7 +87,7 @@ function Login(props) {
         ref={inputEl}
         className="searchBox"
       />
-      {suggestions.length && <div className="suggestions">{results}</div>}
+      <div className="suggestions">{suggestions}</div>
       <div>
         <h3>{pokemon.name}</h3>
         <img src={pokemon.image} />
