@@ -1,22 +1,26 @@
-import { gql } from '@apollo/client';
-const queries = {};
+import gql from 'graphql-tag';
+const Queries = {};
 
-queries.GET_POKEMON = gql`
+Queries.GET_POKEMON = gql`
+{
   query getPokemon($name: String) {
     getPokemon(str: $name) {
       name
       image
     }
   }
+}
 `;
 
-queries.SEARCH_POKEMON = gql`
+Queries.SEARCH_POKEMON = gql`
+{
   query search($name: String) {
     search(str: $name) {
       name
       image
     }
   }
+}
 `;
 
-export default queries;
+export default Queries;
