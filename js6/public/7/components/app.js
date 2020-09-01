@@ -3,10 +3,11 @@ import ReactDOM from 'react-dom';
 import Login from './login';
 import Classroom from './classroom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { ApolloClient, ApolloProvider } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 const client = new ApolloClient({
   uri: '/graphql',
+  cache: new InMemoryCache(),
 });
 
 function Routes() {

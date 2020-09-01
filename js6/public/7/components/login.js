@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import sendQuery from './sendQuery';
 import reactStringReplace from 'react-string-replace';
-import { useQuery } from '@apollo/client';
+import { useQuery, useLazyQuery } from '@apollo/client';
+
+import sendQuery from './sendQuery';
+import { GET_POKEMON, SEARCH_POKEMON } from './gql-queries';
 
 const debounce = (fn, time) => {
   let timeout;
@@ -23,6 +25,8 @@ function Login(props) {
   const [suggestions, setSuggestions] = useState('');
   const [pokemon, setPokemon] = useState({ name: '', image: '' });
   const redirectPath = useHistory();
+  const [getPokemon, { loading, data }] = useLazyQuery(GET_POKEMON);
+  console.log(data);
 
   const handleKeyDown = async (e) => {
     if (e.keyCode === 13 && e.target.value) {
@@ -44,7 +48,7 @@ function Login(props) {
 
       const names = results.map((pokemon, idx) => {
         const handleClick = async () => {
-          const obj = await loadPokemon(pokemon.name);
+          const obj = getPokemon({ variables: { name: pokemon } });
           setPokemon({
             name: obj.name,
             image: obj.image,
