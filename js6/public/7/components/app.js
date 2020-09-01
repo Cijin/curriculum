@@ -3,13 +3,20 @@ import ReactDOM from 'react-dom';
 import Login from './login';
 import Classroom from './classroom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { ApolloClient, ApolloProvider } from '@apollo/client';
+
+const client = new ApolloClient({
+  uri: '/graphql',
+});
 
 function Routes() {
   return (
-    <Router>
-      <Route exact={true} path="/" component={() => <Login />} />
-      <Route path="/classroom" component={() => <Classroom />} />
-    </Router>
+    <ApolloProvider client={client}>
+      <Router>
+        <Route exact={true} path="/" component={() => <Login />} />
+        <Route path="/classroom" component={() => <Classroom />} />
+      </Router>
+    </ApolloProvider>
   );
 }
 

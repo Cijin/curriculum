@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import sendQuery from './sendQuery';
 import reactStringReplace from 'react-string-replace';
+import { useQuery } from '@apollo/client';
 
 const debounce = (fn, time) => {
   let timeout;
