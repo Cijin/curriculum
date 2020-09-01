@@ -4,7 +4,7 @@ import reactStringReplace from 'react-string-replace';
 import { useQuery, useLazyQuery } from '@apollo/client';
 
 import sendQuery from './sendQuery';
-import { GET_POKEMON, SEARCH_POKEMON } from './gql-queries';
+import Queries from './gql-queries';
 
 const debounce = (fn, time) => {
   let timeout;
@@ -25,7 +25,7 @@ function Login(props) {
   const [suggestions, setSuggestions] = useState('');
   const [pokemon, setPokemon] = useState({ name: '', image: '' });
   const redirectPath = useHistory();
-  const [getPokemon, { loading, data }] = useLazyQuery(GET_POKEMON);
+  const [getPokemon, { loading, data }] = useLazyQuery(Queries.GET_POKEMON);
   console.log(data);
 
   const handleKeyDown = async (e) => {
@@ -48,13 +48,15 @@ function Login(props) {
 
       const names = results.map((pokemon, idx) => {
         const handleClick = async () => {
-          const obj = getPokemon({ variables: { name: pokemon } });
-          setPokemon({
-            name: obj.name,
-            image: obj.image,
-          });
-          setSuggestions('');
-          inputEl.current.value = '';
+          getPokemon({ variables: { name: pokemon.name } });
+          if (data && data.getPokemon && data.getPokemon.name) {
+            setPokemon({
+              name: data.getPokemon.name,
+              image: data.getPokemon.image,
+            });
+            setSuggestions('');
+            inputEl.current.value = '';
+          }
         };
 
         return (

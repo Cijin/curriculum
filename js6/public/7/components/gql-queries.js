@@ -1,26 +1,26 @@
 import gql from 'graphql-tag';
-const Queries = {};
+let Queries = {};
 
-Queries.GET_POKEMON = gql`
-{
-  query getPokemon($name: String) {
+const GET_POKEMON = gql`
+  query getPokemon($name: String!) {
     getPokemon(str: $name) {
       name
       image
     }
   }
-}
 `;
 
-Queries.SEARCH_POKEMON = gql`
-{
-  query search($name: String) {
+const SEARCH_POKEMON = gql`
+  query search($name: String!) {
     search(str: $name) {
       name
-      image
     }
   }
-}
 `;
+
+Queries = {
+  GET_POKEMON,
+  SEARCH_POKEMON,
+};
 
 export default Queries;
