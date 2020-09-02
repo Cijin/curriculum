@@ -10,17 +10,25 @@ const GET_POKEMON = gql`
   }
 `;
 
-const SEARCH_POKEMON = gql`
-  query search($name: String!) {
-    search(str: $name) {
+const GET_USER = gql`
+  {
+    user {
       name
+      image
+      lessons {
+        title
+        rating
+      }
+    }
+    lessons {
+      title
     }
   }
 `;
 
 Queries = {
   GET_POKEMON,
-  SEARCH_POKEMON,
+  GET_USER,
 };
 
 export default Queries;

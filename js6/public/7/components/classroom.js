@@ -1,35 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import { useQuery } from '@apollo/client';
+
 import sendQuery from './sendQuery';
 import Lessons from './lessons';
+import Queries from './gql-queries';
 
 function Classroom(props) {
-  const [user, setUser] = useState({
-    name: '',
-    image: '',
-    lessons: [],
-  });
-  const [lessons, setLessons] = useState([]);
-
-  useEffect(() => {
-    sendQuery(
-      `{ user { name, image, lessons { title, rating } } lessons { title } }`
-    ).then((data) => {
-      if (data && data.user) {
-        setUser(data.user);
-      } else {
-        setUser({});
-      }
-      setLessons(data.lessons);
-    });
-  }, []);
+  const { loading, error, data } = useQuery(Queries.GET_USER);
 
   return (
     <div>
-      <h1>{user.name}</h1>
-      <img src={user.image} />
-      <div>
-        <Lessons enrolledObj={user.lessons} lessons={lessons} />
-      </div>
+      {data && data.user && data.lessons && (
+        <div>
+          <h1>{data.user.name}</h1>
+          <img src={data.user.image} />
+          <div>
+            <Lessons enrolledObj={data.user.lessons} lessons={data.lessons} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

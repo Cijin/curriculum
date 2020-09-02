@@ -14,26 +14,17 @@ const debounce = (fn, time) => {
   };
 };
 
-const loadPokemon = async (pokemon) => {
-  return await sendQuery(
-    `{ getPokemon (str: "${pokemon}") { name, image }}`
-  ).then((data) => data.getPokemon);
-};
-
 function Login(props) {
   const inputEl = useRef(null);
-  const [suggestions, setSuggestions] = useState('');
-  const [pokemon, setPokemon] = useState({ name: '', image: '' });
+  const [suggestions, setSuggestions] = useState([]);
   const redirectPath = useHistory();
   const [getPokemon, { loading, data }] = useLazyQuery(Queries.GET_POKEMON);
 
-  const handleKeyDown = async (e) => {
+  let suggestionsList = [];
+
+  const handleKeyDown = (e) => {
     if (e.keyCode === 13 && e.target.value) {
-      const pokeObject = await loadPokemon(e.target.value);
-      setPokemon({
-        name: pokeObject.name,
-        image: pokeObject.image,
-      });
+      getPokemon({ variables: { name: e.target.value } });
       setSuggestions('');
       inputEl.current.value = '';
     }
@@ -43,37 +34,35 @@ function Login(props) {
   const handleChange = debounce(() => {
     const str = inputEl.current.value;
     sendQuery(`{ search(str: "${str}") { name } }`).then((data) => {
-      const results = data.search || [];
-
-      const names = results.map((pokemon, idx) => {
-        const handleClick = async () => {
-          getPokemon({ variables: { name: pokemon.name } });
-          setPokemon({
-            name: data.name,
-            image: data.image,
-          });
-          setSuggestions('');
-          inputEl.current.value = '';
-        };
-
-        return (
-          <h3 onClick={handleClick} key={pokemon.name + idx}>
-            {reactStringReplace(pokemon.name, str, (match, idx) => (
-              <span className="match" key={idx}>
-                {match}
-              </span>
-            ))}
-          </h3>
-        );
-      });
-      setSuggestions(names);
+      setSuggestions(data.search);
     });
   }, 400);
 
+  if (suggestions.length) {
+    const str = inputEl.current.value;
+    suggestionsList = suggestions.map((pokemon, idx) => {
+      const handleClick = () => {
+        getPokemon({ variables: { name: pokemon.name } });
+        setSuggestions('');
+        inputEl.current.value = '';
+      };
+
+      return (
+        <h3 onClick={handleClick} key={pokemon.name + idx}>
+          {reactStringReplace(pokemon.name, str, (match, idx) => (
+            <span className="match" key={idx}>
+              {match}
+            </span>
+          ))}
+        </h3>
+      );
+    });
+  }
+
   const login = () => {
-    if (pokemon.name) {
+    if (data.getPokemon.name) {
       sendQuery(
-        `{ login (pokemon: "${pokemon.name}") {name, image, lessons { title }} }`
+        `{ login (pokemon: "${data.getPokemon.name}") {name} }`
       ).then((data) => redirectPath.push('/classroom'));
     }
   };
@@ -87,16 +76,16 @@ function Login(props) {
         ref={inputEl}
         className="searchBox"
       />
-      <div className="suggestions">{suggestions}</div>
-      <div>
-        <h3>{pokemon.name}</h3>
-        <img src={pokemon.image} />
-        {pokemon.name && (
+      <div className="suggestions">{suggestionsList}</div>
+      {data && (
+        <div>
+          <h3>{data.getPokemon.name}</h3>
+          <img src={data.getPokemon.image} />
           <button className="loginButton" onClick={login}>
             Login
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
