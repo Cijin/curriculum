@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 
-import sendQuery from './sendQuery';
 import Lessons from './lessons';
 import Queries from './gql-queries';
 

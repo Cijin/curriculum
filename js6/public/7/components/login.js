@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import reactStringReplace from 'react-string-replace';
-import { useQuery, useLazyQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 
 import Queries from './gql-queries';
 
@@ -16,14 +16,19 @@ const debounce = (fn, time) => {
 function Login(props) {
   const inputEl = useRef(null);
   const redirectPath = useHistory();
+  const [suggestions, setSuggestions] = useState([]);
   const [getPokemon, { loading, data }] = useLazyQuery(Queries.GET_POKEMON);
-  const [searchPokemon, searchResults] = useLazyQuery(Queries.SEARCH_POKEMON);
+  const [searchPokemon, searchResults] = useLazyQuery(Queries.SEARCH_POKEMON, {
+    onCompleted: () => setSuggestions(searchResults.data.search),
+  });
+  const [userLogin, loginResults] = useLazyQuery(Queries.LOGIN);
 
   let suggestionsList = [];
 
   const handleKeyDown = (e) => {
     if (e.keyCode === 13 && e.target.value) {
       getPokemon({ variables: { name: e.target.value } });
+      setSuggestions([]);
       inputEl.current.value = '';
     }
     return;
@@ -34,11 +39,12 @@ function Login(props) {
     searchPokemon({ variables: { name: str } });
   }, 400);
 
-  if (searchResults.data && searchResults.data.search) {
+  if (suggestions.length) {
     const str = inputEl.current.value;
-    suggestionsList = searchResults.data.search.map((pokemon, idx) => {
+    suggestionsList = suggestions.map((pokemon, idx) => {
       const handleClick = () => {
         getPokemon({ variables: { name: pokemon.name } });
+        setSuggestions([]);
         inputEl.current.value = '';
       };
 
@@ -56,11 +62,13 @@ function Login(props) {
 
   const login = () => {
     if (data.getPokemon.name) {
-      sendQuery(
-        `{ login (pokemon: "${data.getPokemon.name}") {name} }`
-      ).then((data) => redirectPath.push('/classroom'));
+      userLogin({ variables: { name: data.getPokemon.name } });
     }
   };
+
+  if (loginResults.data && loginResults.data.login.name) {
+    redirectPath.push('/classroom');
+  }
 
   return (
     <div>

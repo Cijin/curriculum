@@ -17,9 +17,18 @@ const UNENROLL = gql`
   }
 `;
 
+const SET_RATING = gql`
+  mutation setRating($title: String!, $rating: Int!) {
+    setRating(title: $title, rating: $rating) {
+      name
+    }
+  }
+`;
+
 Mutations = {
   ENROLL,
   UNENROLL,
+  SET_RATING,
 };
 
 export default Mutations;
