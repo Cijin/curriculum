@@ -10,6 +10,14 @@ const GET_POKEMON = gql`
   }
 `;
 
+const SEARCH_POKEMON = gql`
+  query search($name: String!) {
+    search(str: $name) {
+      name
+    }
+  }
+`;
+
 const GET_USER = gql`
   {
     user {
@@ -28,6 +36,7 @@ const GET_USER = gql`
 
 Queries = {
   GET_POKEMON,
+  SEARCH_POKEMON,
   GET_USER,
 };
 

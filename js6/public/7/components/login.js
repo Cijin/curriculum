@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import reactStringReplace from 'react-string-replace';
 import { useQuery, useLazyQuery } from '@apollo/client';
 
-import sendQuery from './sendQuery';
 import Queries from './gql-queries';
 
 const debounce = (fn, time) => {
@@ -16,16 +15,15 @@ const debounce = (fn, time) => {
 
 function Login(props) {
   const inputEl = useRef(null);
-  const [suggestions, setSuggestions] = useState([]);
   const redirectPath = useHistory();
   const [getPokemon, { loading, data }] = useLazyQuery(Queries.GET_POKEMON);
+  const [searchPokemon, searchResults] = useLazyQuery(Queries.SEARCH_POKEMON);
 
   let suggestionsList = [];
 
   const handleKeyDown = (e) => {
     if (e.keyCode === 13 && e.target.value) {
       getPokemon({ variables: { name: e.target.value } });
-      setSuggestions('');
       inputEl.current.value = '';
     }
     return;
@@ -33,17 +31,14 @@ function Login(props) {
 
   const handleChange = debounce(() => {
     const str = inputEl.current.value;
-    sendQuery(`{ search(str: "${str}") { name } }`).then((data) => {
-      setSuggestions(data.search);
-    });
+    searchPokemon({ variables: { name: str } });
   }, 400);
 
-  if (suggestions.length) {
+  if (searchResults.data && searchResults.data.search) {
     const str = inputEl.current.value;
-    suggestionsList = suggestions.map((pokemon, idx) => {
+    suggestionsList = searchResults.data.search.map((pokemon, idx) => {
       const handleClick = () => {
         getPokemon({ variables: { name: pokemon.name } });
-        setSuggestions('');
         inputEl.current.value = '';
       };
 

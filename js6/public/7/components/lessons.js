@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
+import { useMutation } from '@apollo/client';
+
 import Stars from './stars';
-import sendQuery from './sendQuery';
+import Mutations from './gql-mutations';
 
 function Lessons({ enrolledObj, lessons }) {
   const [enrolledLessons, setEnrolledLessons] = useState(enrolledObj);
+  const [enrollMutation, { data }] = useMutation(Mutations.ENROLL);
+  const [unenrollMutation, unenrollData] = useMutation(Mutations.UNENROLL);
 
   const enrolledArray = enrolledLessons.map((lesson) => lesson.title);
   const unenrolled = lessons.filter((lesson) => {
@@ -12,11 +16,8 @@ function Lessons({ enrolledObj, lessons }) {
 
   const unenrolledComponent = unenrolled.map((lesson, idx) => {
     const enroll = () => {
-      sendQuery(`
-        mutation { enroll (title: "${lesson.title}") { name } }
-      `).then(() => {
-        setEnrolledLessons([...enrolledLessons, { title: lesson.title }]);
-      });
+      enrollMutation({ variables: { name: lesson.title } });
+      setEnrolledLessons([...enrolledLessons, { title: lesson.title }]);
     };
 
     return (
@@ -28,13 +29,10 @@ function Lessons({ enrolledObj, lessons }) {
 
   const enrolledComponent = enrolledLessons.map((lesson, idx) => {
     const unenroll = () => {
-      sendQuery(`
-        mutation { unenroll (title: "${lesson.title}") { name } }
-      `).then(() => {
-        const newLessons = [...enrolledLessons];
-        newLessons.splice(idx, 1);
-        setEnrolledLessons(newLessons);
-      });
+      unenrollMutation({ variables: { name: lesson.title } });
+      const newLessons = [...enrolledLessons];
+      newLessons.splice(idx, 1);
+      setEnrolledLessons(newLessons);
     };
 
     return (
