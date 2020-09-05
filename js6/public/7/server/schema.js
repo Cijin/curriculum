@@ -1,6 +1,7 @@
 const { gql } = require('apollo-server-express');
 const fetch = require('node-fetch');
-let allPokemons = [];
+
+const allPokemons = require('../server.js');
 let pokeCache = {};
 let userCache = {};
 let lessonsCache = {};
